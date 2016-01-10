@@ -1,0 +1,19 @@
+TODO:
+make it possible to disable loading the google font (now loaded in javascript) also auto detect the protocol (http/https) and load the font the standard wordpress way.
+
+
+
+v.1.5.3
+new autoupdate script
+added rel="nofollow" to menu
+added option to link the bar logo to custom url
+font awesome icon set updated to v.4.3
+
+v.1.5.4
+Added ALT to menu bar logo image
+
+v.1.5.5
+Bar logo ALT text is now taken from image meta data
+
+v 1.5.6
+Option to disable loading of Open Sans font for the menu. (See Appearance tab of Mobile.Nav settings)
