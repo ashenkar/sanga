@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>This is a test post | 王妈厨房</title>
+<link rel="profile" href="http://gmpg.org/xfn/11" />
+<link rel="stylesheet" type="text/css" media="all" href="http://cdn.wangma.me/wp-content/themes/weaver/style.css" />
+<link rel="pingback" href="http://wangma.me/xmlrpc.php" />
+<link rel="alternate" type="application/rss+xml" title="王妈厨房 &raquo; Feed" href="http://wangma.me/?feed=rss2" />
+<link rel="alternate" type="application/rss+xml" title="王妈厨房 &raquo; 评论 Feed" href="http://wangma.me/?feed=comments-rss2" />
+<link rel="alternate" type="application/rss+xml" title="王妈厨房 &raquo; This is a test post 评论 Feed" href="http://wangma.me/?feed=rss2&amp;p=8" />
+<link rel='stylesheet' id='jquery.slimbox-css'  href='http://cdn.wangma.me/wp-content/plugins/slimbox/stylesheets/jquery.slimbox.css?ver=2.03' type='text/css' media='all' />
+<link rel='stylesheet' id='admin-bar-css'  href='http://cdn.wangma.me/wp-includes/css/admin-bar.css?ver=20110622' type='text/css' media='all' />
+<link rel='stylesheet' id='weaver-style-sheet-css'  href='http://cdn.wangma.me/wp-content/uploads/weaver-subthemes/style-weaver.css?ver=14' type='text/css' media='all' />
+<script type='text/javascript' src='http://cdn.wangma.me/wp-includes/js/l10n.js?ver=20101110'></script>
+<script type='text/javascript' src='http://cdn.wangma.me/wp-includes/js/jquery/jquery.js?ver=1.6.1'></script>
+<script type='text/javascript' src='http://cdn.wangma.me/wp-content/plugins/slimbox/javascript/jquery.slimbox.js?ver=2.03'></script>
+<script type='text/javascript' src='http://cdn.wangma.me/wp-includes/js/comment-reply.js?ver=20090102'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://wangma.me/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://cdn.wangma.me/wp-includes/wlwmanifest.xml" /> 
+<link rel='index' title='王妈厨房' href='http://wangma.me' />
+<link rel='start' title='主食：水煎包' href='http://wangma.me/?p=43' />
+<link rel='prev' title='藕粉玉米蛋花汤' href='http://wangma.me/?p=58' />
+<meta name="generator" content="WordPress 3.2.1" />
+<link rel='canonical' href='http://wangma.me/?p=8' />
+<link rel='shortlink' href='http://wp.me/p1NEi4-8' />
+<script type="text/javascript">
+	jQuery(document).ready(function($){	
+	    var select = $('a[href$=".bmp"],a[href$=".gif"],a[href$=".jpg"],a[href$=".jpeg"], a[href$=".png"],a[href$=".BMP"],a[href$=".GIF"],a[href$=".JPG"],a[href$=".JPEG"],a[href$=".PNG"]');
+		select.slimbox();
+	});
+</script>
+
+<!-- This site is using Weaver 2.2.4 subtheme: Wheat -->
+<meta name="description" content=" 王妈厨房 -  " />
+<meta name="keywords" content="王妈厨房 blog, 王妈厨房" />
+<!-- Add your own CSS snippets between the style tags. -->
+<style type="text/css">
+body {
+	font-family:arial, sans-serif;
+	font-size:14px;
+	letter-spacing:0.08em;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-weight:bold;
+	letter-spacing:-0.05em;
+	font-family:arial, sans-serif;
+}
+</style>
+<!--[if lte IE 7]>
+<style type="text/css" media="screen">
+div.menu { display:inline !important;}
+.menu-add, .menu-add-left {margin-top:-4px !important;}
+</style>
+<![endif]-->
+<!--[if lte IE 8]>
+<style type="text/css" media="screen">
+#primary, #secondary, #altleft, #altright, #ttw-top-widget, #ttw-bot-widget,
+  #ttw-site-top-widget, #ttw-site-bot-widget, #per-page-widget, #wrapper {
+  behavior: url(http://wangma.me/wp-content/themes/weaver/js/PIE/PIE.php); position:relative; }
+</style>
+<![endif]-->
+
+<!-- End of Weaver options -->
+<style type="text/css" media="print">#wpadminbar { display:none; }</style>
+<style type="text/css" media="screen">
+	html { margin-top: 28px !important; }
+	* html body { margin-top: 28px !important; }
+</style>
+
+<style type='text/css'>
+#wpadminbar .quicklinks li#wp-admin-bar-stats {height:28px}
+#wpadminbar .quicklinks li#wp-admin-bar-stats a {height:28px;padding:0}
+#wpadminbar .quicklinks li#wp-admin-bar-stats a img {padding:4px 11px}
+</style>
+</head>
+
+<body class="single single-post postid-8 single-format-standard logged-in admin-bar">
+<div id="wrapper" class="hfeed">
+    <div id="header">
+    	<div id="masthead">
+		<div id="ttw-site-logo"></div>
+		<div id="ttw-site-logo-link" onclick="location.href='http://wangma.me/';" style="cursor:pointer;"></div>
+		<div id="site-title" >
+		    <span>
+			<a href="http://wangma.me/" title="王妈厨房" rel="home">王妈厨房</a>
+		    </span>
+		</div>
+		<div id="site-description" >王妈家常菜</div>
+		<div class="skip-link screen-reader-text"><a href="#content" title="跳至正文">跳至正文</a></div>
+
+	    <div id="branding" role="banner">
+			<img src="http://cdn.wangma.me/wp-content/uploads/2011/08/cropped-wallpaper-46954.jpg" width="940" height="198" alt="王妈厨房" />
+	    </div><!-- #branding -->
+	    		<div id="nav-bottom-menu"><div id="access" role="navigation">
+<div class="menu-header"><ul id="menu-%e7%8e%8b%e5%a6%88%e7%9a%84%e5%8e%a8%e6%88%bf" class="menu"><li id="menu-item-13" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-13"><a href="http://wangma.me">首页</a></li>
+<li id="menu-item-10" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-10"><a href="http://wangma.me/?cat=3">厨房</a></li>
+<li id="menu-item-11" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-11"><a href="http://wangma.me/?cat=4">生活</a></li>
+<li id="menu-item-12" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-12"><a href="http://wangma.me/?cat=1">未分类</a></li>
+</ul></div>		</div></div><!-- #access -->
+		
+	</div><!-- #masthead -->
+    </div><!-- #header -->
+
+
+    <div id="main">
+<div id="container" class="single-page">
+
+        	    <div id="content" role="main">
+
+
+		<div id="nav-above" class="navigation">
+		    <div class="nav-previous"><a href="http://wangma.me/?p=58" rel="prev"><span class="meta-nav">&larr;</span> 藕粉玉米蛋花汤</a></div>
+		    <div class="nav-next"></div>
+		</div><!-- #nav-above -->
+
+		<div id="post-8" class="post-8 post type-post status-publish format-standard hentry category-uncategorized">
+		    <h2 class="entry-title">	<a href="http://wangma.me/?p=8" title="链向 This is a test post 的固定链接" rel="bookmark">This is a test post</a>
+</h2>
+
+			        <div class="entry-meta">
+<span class="meta-prep meta-prep-author">发表于</span> <a href="http://wangma.me/?p=8" title="上午 10:46" rel="bookmark"><span class="entry-date">2011 年 8 月 29 日</span></a> <span class="meta-sep">由</span> <span class="author vcard"><a class="url fn n" href="http://wangma.me/?author=1" title="查看所有由 王妈 发布的文章" rel="author">王妈</a></span>
+        </div><!-- .entry-meta -->
+
+			<div class="entry-content">
+			    <p>Test&#8230;..</p>
+<div style="margin-bottom:10px"><a class="bshareDiv" href="http://www.bshare.cn/share">分享按钮</a><script language="javascript" type="text/javascript" src="http://static.bshare.cn/b/buttonLite.js#uuid=4b4bf027-e0a7-4e1c-a00e-eb7b674ab93f&amp;style=2&amp;textcolor=#000&amp;bgcolor=none&amp;bp=sinaminiblog,qzone,renren,kaixin001,douban,qqmb,sohuminiblog,baiduhi&amp;text=分享到"></script></div><div class="clear-cols"></div>			    			</div><!-- .entry-content -->
+
+
+		<div class="entry-utility">
+		    此条目发表在 <a href="http://wangma.me/?cat=1" title="查看 未分类 中的全部文章" rel="category">未分类</a> 分类目录。将<a href="http://wangma.me/?p=8" title="链向 This is a test post 的固定链接" rel="bookmark">固定链接</a>加入收藏夹。  <span class="edit-link"><a class="post-edit-link" href="http://wangma.me/wp-admin/post.php?post=8&amp;action=edit" title="编辑文章">编辑</a></span>		</div><!-- .entry-utility -->
+		</div><!-- #post-## -->
+
+		<div id="nav-below" class="navigation">
+		    <div class="nav-previous"><a href="http://wangma.me/?p=58" rel="prev"><span class="meta-nav">&larr;</span> 藕粉玉米蛋花汤</a></div>
+		    <div class="nav-next"></div>
+		</div><!-- #nav-below -->
+
+		
+			<div id="comments">
+
+
+
+
+								<div id="respond">
+				<h3 id="reply-title">发表评论 <small><a rel="nofollow" id="cancel-comment-reply-link" href="/?p=8#respond" style="display:none;">取消回复</a></small></h3>
+									<form action="http://wangma.me/wp-comments-post.php" method="post" id="commentform">
+																			<p class="logged-in-as">以 <a href="http://wangma.me/wp-admin/profile.php">王妈</a> 的身份登录。<a href="http://wangma.me/wp-login.php?action=logout&amp;redirect_to=http%3A%2F%2Fwangma.me%2F%3Fp%3D8&amp;_wpnonce=71297c3251" title="登出此账户">登出？</a></p>																			<p class="comment-form-comment"><label for="comment">评论</label><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true"></textarea></p>						<p class="form-allowed-tags">您可以使用这些 <abbr title="HyperText Markup Language">HTML</abbr> 标签和属性： <code>&lt;a href=&quot;&quot; title=&quot;&quot;&gt; &lt;abbr title=&quot;&quot;&gt; &lt;acronym title=&quot;&quot;&gt; &lt;b&gt; &lt;blockquote cite=&quot;&quot;&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=&quot;&quot;&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=&quot;&quot;&gt; &lt;strike&gt; &lt;strong&gt; </code></p>						<p class="form-submit">
+							<input name="submit" type="submit" id="submit" value="发表评论" />
+							<input type='hidden' name='comment_post_ID' value='8' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+						</p>
+						<input type="hidden" id="_wp_unfiltered_html_comment" name="_wp_unfiltered_html_comment" value="ea2acbebf6" /><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="ec38388a34" /></p>					</form>
+							</div><!-- #respond -->
+						
+</div><!-- #comments -->
+
+
+	    </div><!-- #content -->
+	    	</div><!-- #container -->
+
+	<div id="primary" class="widget-area" role="complementary">
+	    <ul class="xoxo">
+<li id="text-4" class="widget-container widget_text">			<div class="textwidget">管理员通知：这个博客未经充分测试就上线了，现在发现，在使用CDN服务进行加速的情况下，由于某个插件的兼容性问题，导致没法在文章末尾留言。暂时禁用了CDN加速，现在已经可以正常留言了。正在想方设法解决中...</div>
+		</li><li id="search-2" class="widget-container widget_search"><form role="search" method="get" id="searchform" action="http://wangma.me/" >
+	<div><label class="screen-reader-text" for="s">搜索：</label>
+	<input type="text" value="" name="s" id="s" />
+	<input type="submit" id="searchsubmit" value="搜索" />
+	</div>
+	</form></li><li id="text-3" class="widget-container widget_text"><h3 class="widget-title">关于”王妈厨房”</h3>			<div class="textwidget">王妈是谁？王妈就是一个平凡的王姓中年妇女，赋闲在家闲得无聊，于是平时喜欢研究做饭，把全家人养的胖乎乎的。</p>由于实在无聊，又担心自己的厨艺失传，所以干脆就都记录下来放到网上吧。所以这个网站就诞生了。</p>嘿嘿，虽然王妈平时也很潮，喜欢在网上打麻将，逛淘宝，不过潮到能自己做网站？不管你信不信，反正我不信。其实这个网站从建设到内容的撰写，再到照片的拍摄，都是由王妈的儿子一手进行的。王妈只需要按照平时的流程把各种好吃的饭菜做一遍，其余工作就都不需要自己负责了。</p>这是一个纯粹用于记录王妈手艺的网站，同时所记录的都是一些家常菜的做法，所有记录主要是为了自娱自乐，当然如果能对别人有所帮助，那就最好不过了。</div>
+		</li>		<li id="recent-posts-2" class="widget-container widget_recent_entries">		<h3 class="widget-title">近期文章</h3>		<ul>
+				<li><a href="http://wangma.me/?p=8" title="This is a test post">This is a test post</a></li>
+				<li><a href="http://wangma.me/?p=58" title="藕粉玉米蛋花汤">藕粉玉米蛋花汤</a></li>
+				<li><a href="http://wangma.me/?p=43" title="主食：水煎包">主食：水煎包</a></li>
+				</ul>
+		</li><li id="categories-2" class="widget-container widget_categories"><h3 class="widget-title">分类目录</h3>		<ul>
+	<li class="cat-item cat-item-3"><a href="http://wangma.me/?cat=3" title="王妈的厨房中发生的事情">厨房</a> (2)
+</li>
+	<li class="cat-item cat-item-1"><a href="http://wangma.me/?cat=1" title="其他乱七八糟的事情">未分类</a> (1)
+</li>
+		</ul>
+</li><li id="tag_cloud-3" class="widget-container widget_tag_cloud"><h3 class="widget-title">内容标签</h3><div class="tagcloud"><a href='http://wangma.me/?tag=%e4%b8%bb%e9%a3%9f' class='tag-link-11' title='1 个话题' style='font-size: 8pt;'>主食</a>
+<a href='http://wangma.me/?tag=%e5%8d%88%e9%a5%ad' class='tag-link-12' title='1 个话题' style='font-size: 8pt;'>午饭</a>
+<a href='http://wangma.me/?tag=%e6%99%9a%e9%a5%ad' class='tag-link-7' title='2 个话题' style='font-size: 22pt;'>晚饭</a>
+<a href='http://wangma.me/?tag=%e6%b0%b4%e7%85%8e%e5%8c%85' class='tag-link-8' title='1 个话题' style='font-size: 8pt;'>水煎包</a>
+<a href='http://wangma.me/?tag=%e6%b1%a4' class='tag-link-13' title='1 个话题' style='font-size: 8pt;'>汤</a>
+<a href='http://wangma.me/?tag=%e6%b8%85%e6%b7%a1' class='tag-link-9' title='1 个话题' style='font-size: 8pt;'>清淡</a>
+<a href='http://wangma.me/?tag=%e7%88%bd%e5%8f%a3' class='tag-link-14' title='1 个话题' style='font-size: 8pt;'>爽口</a>
+<a href='http://wangma.me/?tag=%e7%ae%80%e5%8d%95' class='tag-link-10' title='1 个话题' style='font-size: 8pt;'>简单</a></div>
+</li><li id="archives-3" class="widget-container widget_archive"><h3 class="widget-title">按月归档</h3>		<select name="archive-dropdown" onchange='document.location.href=this.options[this.selectedIndex].value;'> <option value="">选择月份</option> 	<option value='http://wangma.me/?m=201108'> 2011 年八月 &nbsp;(3)</option>
+ </select>
+</li><li id="linkcat-2" class="widget-container widget_links"><h3 class="widget-title">链接</h3>
+	<ul class='xoxo blogroll'>
+<li><a href="http://www.xieyidian.com" rel="child" title="王妈儿子的博客" target="_blank">写一点</a></li>
+
+	</ul>
+</li>
+<li id="meta-2" class="widget-container widget_meta"><h3 class="widget-title">功能</h3>			<ul>
+			<li><a href="http://wangma.me/wp-admin/">管理站点</a></li>			<li><a href="http://wangma.me/wp-login.php?action=logout&#038;_wpnonce=71297c3251">登出</a></li>
+			<li><a href="http://wangma.me/?feed=rss2" title="使用 RSS 2.0 订阅本站点内容">文章 <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="http://wangma.me/?feed=comments-rss2" title="使用 RSS 订阅本站点的所有文章的近期评论">评论 <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="http://wordpress.org/" title="基于 WordPress，一个优美、先进的个人信息发布平台。">WordPress.org</a></li>
+						</ul>
+</li>	</ul>
+	</div><!-- #primary .widget-area -->
+    </div><!-- #main -->
+    	<div id="footer">
+		<div id="colophon">
+
+<table id='ttw_ftable'><tr>
+ <td id='ttw_ftdl'><div id="site-info">
+本站<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/2.5/cn/" TARGET="_blank">知识共享署名-相同方式共享 2.5 中国大陆许可协议</a>进行许可。</div></td></tr></table>
+		</div><!-- #colophon -->
+	</div><!-- #footer -->
+    </div><!-- #wrapper -->
+
+
+<script type='text/javascript' src='http://cdn.wangma.me/wp-includes/js/admin-bar.js?ver=20110131'></script>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-25393905-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+})();
+</script>
+<script type='text/javascript' src='http://s.gravatar.com/js/gprofiles.js?w&#038;ver=3.2.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var WPGroHo = {
+	my_hash: "d535cc6b7d8b47e50b011042250aaaef"
+};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://cdn.wangma.me/wp-content/plugins/jetpack/modules/wpgroho.js?ver=3.2.1'></script>
+	<div style="display:none">
+	</div>
+		<div id="wpadminbar">
+			<div class="quicklinks">
+				<ul>
+													
+		<li id="wp-admin-bar-my-account-with-avatar" class="menupop">
+			<a href="http://wangma.me/wp-admin/profile.php"><span><img alt='' src='http://1.gravatar.com/avatar/d535cc6b7d8b47e50b011042250aaaef?s=16&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D16&amp;r=G' class='avatar avatar-16 photo' height='16' width='16' />王妈</span></a>
+
+						<ul>
+											
+		<li id="wp-admin-bar-edit-profile" class="">
+			<a href="http://wangma.me/wp-admin/profile.php">编辑我的个人资料</a>
+
+			
+					</li>											
+		<li id="wp-admin-bar-logout" class="">
+			<a href="http://wangma.me/wp-login.php?action=logout&#038;_wpnonce=71297c3251">登出</a>
+
+			
+					</li>							</ul>
+			
+					</li>													
+		<li id="wp-admin-bar-dashboard" class="">
+			<a href="http://wangma.me/wp-admin/">控制板</a>
+
+			
+					</li>													
+		<li id="wp-admin-bar-edit" class="">
+			<a href="http://wangma.me/wp-admin/post.php?post=8&#038;action=edit">编辑文章</a>
+
+			
+					</li>													
+		<li id="wp-admin-bar-new-content" class="menupop">
+			<a href="http://wangma.me/wp-admin/post-new.php?post_type=post"><span>添加</span></a>
+
+						<ul>
+											
+		<li id="wp-admin-bar-new-post" class="">
+			<a href="http://wangma.me/wp-admin/post-new.php?post_type=post">文章</a>
+
+			
+					</li>											
+		<li id="wp-admin-bar-new-page" class="">
+			<a href="http://wangma.me/wp-admin/post-new.php?post_type=page">页面</a>
+
+			
+					</li>											
+		<li id="wp-admin-bar-new-media" class="">
+			<a href="http://wangma.me/wp-admin/media-new.php">媒体</a>
+
+			
+					</li>											
+		<li id="wp-admin-bar-new-link" class="">
+			<a href="http://wangma.me/wp-admin/link-add.php">链接</a>
+
+			
+					</li>											
+		<li id="wp-admin-bar-new-user" class="">
+			<a href="http://wangma.me/wp-admin/user-new.php">用户</a>
+
+			
+					</li>											
+		<li id="wp-admin-bar-new-theme" class="">
+			<a href="http://wangma.me/wp-admin/theme-install.php">主题</a>
+
+			
+					</li>											
+		<li id="wp-admin-bar-new-plugin" class="">
+			<a href="http://wangma.me/wp-admin/plugin-install.php">插件</a>
+
+			
+					</li>							</ul>
+			
+					</li>													
+		<li id="wp-admin-bar-comments" class="">
+			<a href="http://wangma.me/wp-admin/edit-comments.php">评论 </a>
+
+			
+					</li>													
+		<li id="wp-admin-bar-appearance" class="menupop">
+			<a href="http://wangma.me/wp-admin/themes.php"><span>外观</span></a>
+
+						<ul>
+											
+		<li id="wp-admin-bar-themes" class="">
+			<a href="http://wangma.me/wp-admin/themes.php">主题</a>
+
+			
+					</li>											
+		<li id="wp-admin-bar-widgets" class="">
+			<a href="http://wangma.me/wp-admin/widgets.php">小工具</a>
+
+			
+					</li>											
+		<li id="wp-admin-bar-menus" class="">
+			<a href="http://wangma.me/wp-admin/nav-menus.php">菜单</a>
+
+			
+					</li>											
+		<li id="wp-admin-bar-background" class="">
+			<a href="http://wangma.me/wp-admin/themes.php?page=custom-background">背景</a>
+
+			
+					</li>											
+		<li id="wp-admin-bar-header" class="">
+			<a href="http://wangma.me/wp-admin/themes.php?page=custom-header">顶部</a>
+
+			
+					</li>							</ul>
+			
+					</li>													
+		<li id="wp-admin-bar-get-shortlink" class="">
+			<a href="http://wp.me/p1NEi4-8">短链接</a>
+
+			
+							<input class="shortlink-input" type="text" readonly="readonly" value="http://wp.me/p1NEi4-8" />					</li>													
+		<li id="wp-admin-bar-stats" class="">
+			<a href="http://wangma.me/wp-admin/admin.php?page=stats"><img style='width:95px;height:20px' src='http://wangma.me/wp-admin/admin.php?page=stats&noheader&proxy&chart=admin-bar-hours&height=20&hours=48' alt='Views over 48 hours. Click for more Site Stats.' title='Views over 48 hours. Click for more Site Stats.' /></a>
+
+			
+					</li>									</ul>
+			</div>
+
+			<div id="adminbarsearch-wrap">
+				<form action="http://wangma.me" method="get" id="adminbarsearch">
+					<input class="adminbar-input" name="s" id="adminbar-search" type="text" value="" maxlength="150" />
+					<input type="submit" class="adminbar-button" value="搜索"/>
+				</form>
+			</div>
+		</div>
+
+		</body>
+</html>

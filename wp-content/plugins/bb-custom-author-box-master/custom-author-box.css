@@ -1,0 +1,53 @@
+/** Custom Author Box CSS */
+
+
+.postauthor {
+  margin-bottom: 0px;
+  padding-top: 40px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 40px;
+  margin-left: -40px;
+  margin-right: -40px;
+  background-color: #eaeaea;
+  color: #333;
+  overflow: auto;
+}
+
+.postauthor img {
+    display: block;
+    float: left;
+    margin-right: 24px;
+    
+}
+
+.postauthor b {
+ color: #333;
+}
+
+.postauthor p {
+    color: #000;
+    font-size: 15px;
+    line-height: 27px;
+    margin-bottom: 0;
+}
+
+.postauthor-bottom {
+
+float: right;
+
+}
+
+.postauthor-bottom span {
+
+}
+
+.postauthor-bottom .author-fb , .postauthor-bottom .author-twitter , .postauthor-bottom .author-gplus , .postauthor-bottom .author-blog {
+
+
+}
+
+.postauthor-bottom i.fa {
+  margin-left: 24px;
+  margin-right: 8px;
+}

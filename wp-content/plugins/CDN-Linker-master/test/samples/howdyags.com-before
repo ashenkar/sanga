@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+
+	<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+		<title>HowdyAgs.com - The Aggie Social Network &#124; Home</title>
+
+		
+		<meta name="generator" content="WordPress 3.1" /> <!-- leave this for stats -->
+
+		<link rel="stylesheet" href="http://howdyags.com/wp-content/themes/howdyags/style.css" type="text/css" media="screen" />
+
+					<link rel="alternate" type="application/rss+xml" title="HowdyAgs.com &#8211; The Aggie Social Network | Site Wide Activity RSS Feed" href="http://howdyags.com/activity/feed/" />
+		
+		
+		
+		<link rel="alternate" type="application/rss+xml" title="HowdyAgs.com &#8211; The Aggie Social Network Blog Posts RSS Feed" href="http://howdyags.com/feed/" />
+		<link rel="alternate" type="application/atom+xml" title="HowdyAgs.com &#8211; The Aggie Social Network Blog Posts Atom Feed" href="http://howdyags.com/feed/atom/" />
+
+		<link rel="pingback" href="http://howdyags.com/xmlrpc.php" />
+
+		<link rel="alternate" type="application/rss+xml" title="HowdyAgs.com - The Aggie Social Network &raquo; Howdy Ags! Comments Feed" href="http://howdyags.com/howdy-ags/feed/" />
+<link rel='stylesheet' id='bp-moderation-css'  href='http://howdyags.com/wp-content/plugins/bp-moderation/css/bp-moderation.css?ver=0.1.4' type='text/css' media='screen' />
+<link rel='stylesheet' id='wangguard-css'  href='http://howdyags.com/wp-content/plugins/wangguard/wangguard.css?ver=3.1' type='text/css' media='all' />
+<script type='text/javascript' src='http://howdyags.com/wp-includes/js/l10n.js?ver=20101110'></script>
+<script type='text/javascript' src='http://howdyags.com/wp-includes/js/jquery/jquery.js?ver=1.4.4'></script>
+<script type='text/javascript' src='http://howdyags.com/wp-content/plugins/bp-moderation/js/bp-moderation.js?ver=0.1.4'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var BP_DTheme = {
+	my_favs: "My Favorites",
+	accepted: "Accepted",
+	rejected: "Rejected",
+	show_all_comments: "Show all comments for this thread",
+	show_all: "Show all",
+	comments: "comments",
+	close: "Close",
+	mention_explain: "@ is a unique identifier for  that you can type into any message on this site.  will be sent a notification and a link to your message any time you use it."
+};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://howdyags.com/wp-content/plugins/buddypress/bp-themes/bp-default/_inc/global.js?ver=3.1'></script>
+<script type='text/javascript' src='http://howdyags.com/wp-content/plugins/buddypress-followers/_inc/bp-follow.js?ver=3.1'></script>
+<script type='text/javascript' src='http://howdyags.com/wp-includes/js/comment-reply.js?ver=20090102'></script>
+<script type='text/javascript' src='http://howdyags.com/wp-content/plugins/buddypress-like/_inc/js/bp-like.min.js?ver=3.1'></script>
+<script type='text/javascript' src='http://howdyags.com/wp-content/plugins/buddypress-share-it/bp-share-it.js?ver=3.1'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://howdyags.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://howdyags.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='index' title='HowdyAgs.com &#8211; The Aggie Social Network' href='http://howdyags.com/' />
+<link rel='prev' title='Site Blog' href='http://howdyags.com/site-blog/' />
+<link rel='canonical' href='http://howdyags.com/' />
+<style type="text/css">
+ /*<![CDATA[*/
+ /* bp-wp-navbar - hide main site navigation */
+ ul#nav {display:none;}
+ /*]]>*/
+</style>
+<style type="text/css">
+ /*<![CDATA[*/
+#wp-admin-bar {position:absolute;}
+#bp-default #wp-admin-bar .padder {	position:relative;}
+ /*]]>*/
+</style>
+<style type="text/css">
+	#bsbm_form { clear:both; margin:20px 0; }
+	#bsbm_form label { font-size: 16px; font-weight:bold; color: #999; margin:0; padding:10px 0;}
+	#bsbm_form .question { font-size: 14px; font-weight:normal; margin:0; padding:5px 0;}
+	#bsbm_form .answer { font-size: 12px; font-weight:normal;}
+	#bsbm_form .notice { font-size: 11px; font-weight:normal;}	
+</style>
+
+	<script type="text/javascript">var ajaxurl = "http://howdyags.com/wp-load.php";</script>
+
+<style type="text/css">
+	.bp-like.activity_liked .activity-meta,
+	.bp-like.blogpost_liked .activity-meta,
+	.users-who-like,
+	.mini a.view-likes,
+	.mini a.hide-likes {
+		display: none;
+	}
+	
+	/* To match the default theme */
+	#bp-default .users-who-like {
+		margin: 10px 0 -10px 0;
+		background: #F5F5F5;
+		-moz-border-radius: 4px;
+		-webkit-border-radius: 4px;
+		border-radius: 4px;
+		padding: 8px 8px 0px 12px;
+		color: #8C8A8F;
+	}
+	#bp-default .users-who-like a {
+		color: #777;
+		padding: 0;
+		background: none;
+		border: none;
+		text-decoration: underline;
+		font-size: 12px;
+	}
+	#bp-default .users-who-like a:hover { color: #222; }
+	#bp-default .mini .users-who-like {
+		width: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	#bp-default .users-who-like img.avatar {
+		float: none;
+		border: none;
+		width: 30px;
+		height: 30px;
+		padding: 0;
+		margin: 0;
+	}
+	ul#activity-stream li.bp-like .activity-inner {
+		border-left: 3px solid #ddd;
+		color: #888;
+		padding-left: 15px;
+		font-style: italic;
+	}
+	#bp-default div.post div.author-box, div.comment-avatar-box {
+	position: relative;
+	}
+	#bp-default div.like-box {
+		background: #f0f0f0;
+		width: 90px;
+		position: absolute;
+		bottom: -40px;
+		left: 0;
+		font-family: georgia, times, serif;
+		font-style: italic;
+		text-align: center;
+		padding: 5px 0;
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		border-radius: 3px;
+	}
+</style>
+<script type="text/javascript">
+/* <![CDATA[ */
+	var bp_like_terms_like = 'Like';
+	var bp_like_terms_like_message = 'Like this item';
+	var bp_like_terms_unlike_message = 'Unlike this item';
+	var bp_like_terms_view_likes = 'View likes';
+	var bp_like_terms_hide_likes = 'Hide likes';
+	var bp_like_terms_unlike_1 = 'Unlike (1)';
+/* ]]> */
+</script>
+
+        
+			<script type="text/javascript">
+			//<![CDATA[
+				var _gaq = _gaq || [];
+
+				
+					_gaq.push(['_setAccount', 'UA-21678116-2']);
+
+					
+					_gaq.push(['_trackPageview']);
+
+				 
+
+                
+				(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+				})();
+			//]]>
+			</script>
+
+		<style type="text/css">
+
+</style>
+<link href="http://howdyags.com/wp-content/plugins/buddypress-share-it/style.css" media="screen" rel="stylesheet" type="text/css"/>
+<link rel='stylesheet' id='bp-album-css-css'  href='http://howdyags.com/wp-content/plugins/bp-album/includes/css/general.css?ver=3.1' type='text/css' media='all' />
+	<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+		<style type="text/css">
+			#header { background-image: url(http://howdyags.com/wp-content/uploads/2011/04/20110410logo.png); }
+						#header h1, #header #desc { display: none; }
+					</style>
+	
+	<script type="text/javascript"> jQuery(document).ready( function() { jQuery("a.confirm").click( function() { if ( confirm( 'Are you sure?' ) ) return true; else return false; }); });</script>
+
+
+	</head>
+
+	<body class="home-page home page page-id-8 page-template page-template-default" id="bp-default">
+
+		
+		<div id="header">
+
+			<h1 id="logo"><a href="http://howdyags.com" title="Home">HowdyAgs.com - The Aggie Social Network</a></h1>
+		</div><!-- #header -->
+
+				
+		<div id="container">
+	<div id="content">
+		<div class="padder">
+
+		
+		<div class="page" id="blog-page">
+
+			
+				<h2 class="pagetitle">Howdy Ags!</h2>
+
+				<div class="post" id="post-8">
+
+					<div class="entry">
+
+						<h3><a href="http://howdyags.com/wp-content/uploads/2011/04/circle200.png"><img class="alignright size-full wp-image-14" title="circle200" src="http://howdyags.com/wp-content/uploads/2011/04/circle200.png" alt="" width="200" height="200" /></a>Welcome to <em>The Aggie &#8220;Social&#8221; Network</em>!</h3>
+<h4>We will be live soon.  Check back often.</h4>
+<h4>Are you still using that old social network?  The one with all the  privacy issues.  Changing things in the name of the &#8221;Social Web&#8221;.</h4>
+<h4>It is time for a change.</h4>
+<h4><em><strong>Join and get all your Aggie friends to do the same.</strong></em></h4>
+<h4>Enjoy the site and Gig &#8216;em.</h4>
+
+												
+					</div>
+
+				</div>
+
+			
+		</div><!-- .page -->
+
+		
+		</div><!-- .padder -->
+	</div><!-- #content -->
+
+	
+<div id="sidebar">
+	<div class="padder">
+
+	
+	
+		
+		<p id="login-text">
+			To start connecting please log in first.					</p>
+
+		<form name="login-form" id="sidebar-login-form" class="standard-form" action="http://howdyags.com/wp-login.php" method="post">
+			<label>Username<br />
+			<input type="text" name="log" id="sidebar-user-login" class="input" value="" tabindex="97" /></label>
+
+			<label>Password<br />
+			<input type="password" name="pwd" id="sidebar-user-pass" class="input" value="" tabindex="98" /></label>
+
+			<p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="sidebar-rememberme" value="forever" tabindex="99" /> Remember Me</label></p>
+
+			<div id="bsbm_form"><label for="bsbm_question">Security Question:</label>
+	<div class="question">What is 13 + 3 ?</div>
+	<div class="answer">
+	<input type="text" name="mathvalue2" value="" />
+		<div style="display:none">Please leave these two fields as-is:
+		<input type="text" name="mathvalue0" value="13" />
+		<input type="text" name="mathvalue1" value="3" />
+		</div>
+	</div>
+	<div class="notice">Gotta a Math Problem for you Ags! Solve the problem to continue.</div></div>			<input type="submit" name="wp-submit" id="sidebar-wp-submit" value="Log In" tabindex="100" />
+			<input type="hidden" name="testcookie" value="1" />
+		</form>
+
+		<p></p><!-- WP-FB AutoConnect Premium Button v1.9.2 -->
+    <span class="fbLoginButton">
+    <script type="text/javascript">//<!--
+    document.write('<fb:login-button v="2" size="small" onlogin="jfb_js_login_callback();">Login with Facebook</fb:login-button>');    //--></script>
+    </span>
+    
+    <!--Premium Add-On #460, version 20-->
+
+	
+	
+	
+	
+	</div><!-- .padder -->
+</div><!-- #sidebar -->
+
+
+		</div> <!-- #container -->
+
+				
+		<div id="footer">
+	    	<p><a href="http://howdyags.com">Copyright &copy;2011 HowdyAgs.com &#8211; The Aggie Social Network</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#header">Go back to top &uarr;</a></p>
+
+					</div><!-- #footer -->
+
+		
+		
+<!-- Generated in 0.423 seconds. -->
+
+	
+<!-- WP-FB AutoConnect Premium Init v1.9.2 -->
+    <script type="text/javascript" src="https://ssl.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US"></script>
+    <script type="text/javascript">//<!--
+        FB.init("2b36dffb4a3f6d86bac1d4821fed5c46","http://howdyags.com/wp-content/plugins/wp-fb-autoconnect/facebook-platform/xd_receiver.htm");
+    //--></script>
+    
+<!-- WP-FB AutoConnect Premium Callback v1.9.2 -->
+  
+  <form id="wp-fb-ac-fm" name="jfb_js_login_callback_form" method="post" action="http://howdyags.com/wp-content/plugins/wp-fb-autoconnect/_process_login.php" >
+      <input type="hidden" name="redirectTo" value="/" />
+      <input type="hidden" id="_wpnonce" name="_wpnonce" value="3223099c15" /><input type="hidden" name="_wp_http_referer" value="/" />   
+    </form><script type="text/javascript">//<!--
+    function jfb_js_login_callback()
+    {
+
+        FB.Connect.showPermissionDialog('email', function(reply1)
+        {
+        FB.Connect.showPermissionDialog('publish_stream', function(reply2)
+        {
+            FB.Facebook.apiClient.users_hasAppPermission('email', function (emailCheck)
+            {
+                 if(emailCheck)
+                 {
+document.jfb_js_login_callback_form.submit();
+                 }
+                 else
+                 {
+                     alert('Sorry, this site requires an e-mail address to log you in.');
+                 }
+            });
+        });
+        });
+    }
+    //--></script>
+	</body>
+
+</html>

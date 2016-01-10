@@ -1,0 +1,687 @@
+@us_names_button_width:183px;
+@us_names_button_share_width:20%;
+@us_names_button_count_width:20%;
+@us_names_button_name_width:60%;
+
+@us_button_width:90px;
+@us_button_share_width:50%;
+@us_button_count_width:50%;
+
+&.us_tac {
+	text-align: center!important;
+}
+&.us_tar {
+	text-align: right!important;
+}
+&.us_tal {
+	text-align: left!important;
+}
+
+.us_wrapper {
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	text-shadow:none;
+	clear: both;
+	line-height: 0;
+	cursor: auto;
+	max-width: 100%;
+	.us_heading {
+		font-size: 24px;
+		line-height: 24px;
+		margin-bottom: 20px;
+		font-weight: bold;
+	}
+
+	label {
+		color:black;
+	}
+	.border-box {
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+	}
+	@import 'less/alerts.less';
+	@import 'less/forms.less';
+	@import 'less/buttons.less';
+	@import 'less/mixins.less';
+	@import 'less/utilities.less';
+	@import 'less/variables.less';
+	@import 'less/font/icons.less';
+
+	&.us_mail_fade.mfp-bg.mfp-ready {
+		opacity: 0.8;
+	}
+	&.us_mail_fade.mfp-bg.mfp-removing {
+		opacity: 0;
+	}
+	&.us_mail_fade.mfp-wrap .mfp-content {
+	  	opacity: 0;
+		-webkit-transition: all 0.30s ease-out;
+		-moz-transition: all 0.30s ease-out;
+		transition: all 0.30s ease-out;
+	}
+	&.us_mail_fade.mfp-wrap.mfp-ready .mfp-content {
+	  	opacity: 1;
+	}
+	&.us_mail_fade.mfp-wrap.mfp-removing .mfp-content {
+	  	opacity: 0;
+	}
+
+	&.mfp-bg {
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 1042;
+		overflow: hidden;
+		position: fixed;
+		background: #0b0b0b;
+		opacity: 0.8;
+ 	}
+	&.mfp-wrap {
+		z-index: 1043!important;
+	}
+	&.us_modal {
+		position: relative;
+		background: #FFF;
+		padding: 20px;
+		width: auto;
+		max-width: 500px;
+		margin: 20px auto;
+		text-align: left;
+		line-height: 20px;
+		.us_mail_message {
+			height:110px;
+		}
+	}
+	.us_button {
+		overflow: hidden;
+		text-align: center;
+		width:@us_button_width;
+		display:inline-block;
+		vertical-align: middle;
+		white-space: nowrap;
+		margin-right: 3px;
+		margin-bottom: 3px;
+		.usnative {
+			position: relative;
+			top: 50%;
+			-webkit-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+			transform: translateY(-50%);
+			display: none;
+			margin-left: auto;
+			margin-right: auto;
+			.vk-like {
+				width:48px!important;
+				iframe {
+					width: 48px!important;
+					margin-left: 25px;
+				}
+			}
+		}
+		&.us_native {
+			&:hover {
+				cursor: auto;
+				.us_box {
+					display: none;
+				}
+				.usnative {
+					display:block;
+				}
+			}
+		}
+		&.us_names {
+			width:@us_names_button_width;
+			.us_count {
+				width: @us_names_button_count_width;
+			}
+			.us_share {
+				width: @us_names_button_share_width;
+			}
+			.us_name {
+				width: @us_names_button_name_width;
+			}
+			&.us_no_count {
+				.us_share {
+					width: @us_names_button_share_width;
+				}
+			}
+		}
+		&.us_whatsapp {
+			display: none;
+		}
+		.us_box {
+			display:block;
+			font-size: 18px;
+			width: 100%;
+			height: 100%;
+			padding: 0!important; //BuddyPress is using padding in links
+			border:none;
+		}
+		.us_count {
+			display:block;
+			float:right;
+			width: @us_button_count_width;
+			position: relative;
+			top: 50%;
+			-webkit-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+			transform: translateY(-50%);
+		}
+		.us_share {
+			display:block;
+			float:left;
+			width: @us_button_share_width;
+			position: relative;
+			top: 50%;
+			-webkit-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+			transform: translateY(-50%);
+		}
+		.us_name {
+			display:block;
+			float:left;
+			position: relative;
+			top: 50%;
+			-webkit-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+			transform: translateY(-50%);
+		}
+		&.us_total {
+			.us_share {
+				float:right;
+			}
+			.us_count {
+				float:left;
+			}
+		}
+		&.us_share_text {
+			width: auto;
+			margin-right: 10px;
+			background-color: transparent;
+			span {
+				position: relative;
+				top: 50%;
+				-webkit-transform: translateY(-50%);
+				-ms-transform: translateY(-50%);
+				transform: translateY(-50%);
+				}
+		}
+		&.us_no_count {
+			.us_share {
+				width: 100%;
+			}
+		}
+		.us_mail {
+			.us_box {
+				.us_share {
+					width: 100%;
+				}
+			}
+		}
+	}
+
+	&.us_skin_default {
+		.us_button {
+			height: 30px;
+			&:hover {
+				.us_share {
+					background-color: transparent;
+				}
+			}
+			.us_share {
+				background-color: transparent;
+			}
+		}
+		a {
+			color:#ffffff!important; //Some themes are using a* to target all links
+			text-decoration: none!important; //Some themes are using a* to target all links
+			border:none; //Some themes are using a* to target all links
+			&:hover {
+				color:#ffffff!important; //Some themes are using a* to target all links
+			}
+			&:visited {
+				color:#ffffff!important; //Some themes are using a* to target all links
+			}
+		}
+		.us_no_link {
+			color: #ffffff;
+		}
+	}
+	&.us_skin_simple {
+		.us_button, .us_fan_count {
+			height: 28px;
+			box-shadow:1px 1px 3px rgba(0, 0, 0, 0.05);
+			border: 1px solid #ddd;
+			background-color: #ddd;
+			background-image: -webkit-linear-gradient(rgba(255,255,255,1),rgba(255,255,255,0));
+			background-image: -moz-linear-gradient(rgba(255,255,255,1),rgba(255,255,255,0));
+			background-image: -ms-linear-gradient(rgba(255,255,255,1),rgba(255,255,255,0));
+			background-image: -o-linear-gradient(rgba(255,255,255,1),rgba(255,255,255,0));
+			background-image: linear-gradient(rgba(255,255,255,1),rgba(255,255,255,0));
+			border-radius: 5px;
+			&:hover {
+				background-color: #ccc;
+				.us_share {
+					background-color: transparent;
+				}
+			}
+			&:active {
+				background-image: -webkit-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1));
+				background-image: -moz-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1));
+				background-image: -ms-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1));
+				background-image: -o-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1));
+				background-image: linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1));
+			}
+			&.us_no_link {
+				&:hover {
+					background-color: #ddd;
+				}
+				&:active {
+					background-image: -webkit-linear-gradient(rgba(255,255,255,1),rgba(255,255,255,0));
+					background-image: -moz-linear-gradient(rgba(255,255,255,1),rgba(255,255,255,0));
+					background-image: -ms-linear-gradient(rgba(255,255,255,1),rgba(255,255,255,0));
+					background-image: -o-linear-gradient(rgba(255,255,255,1),rgba(255,255,255,0));
+					background-image: linear-gradient(rgba(255,255,255,1),rgba(255,255,255,0));
+				}
+			}
+		}
+		.us_share {
+			background-color: transparent;
+			&:hover {
+				background-color: transparent;
+			}
+		}
+		.us_fan_count {
+			margin-left: -1px;
+			margin-top:-1px;
+				a {
+				&:visited {
+					color:inherit;
+				}
+			}
+
+		}
+	}
+	&.us_skin_minimal {
+		.us_button, .us_fan_count {
+			height: 30px;
+			border: 1px solid #ddd;
+			background-color: white;
+			&:hover {
+				.us_share {
+					background-color: transparent;
+				}
+			}
+			.us_share {
+				background-color: transparent;
+			}
+		}
+		.us_fan_count {
+			margin-left:-1px;
+			margin-top:-1px;
+		}
+	}
+	&.us_skin_modern {
+		.us_button, .us_fan_count {
+			height: 30px;
+			box-shadow:1px 1px 3px rgba(0, 0, 0, 0.05);
+			background-image: -webkit-linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));
+			background-image: -moz-linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));
+			background-image: -ms-linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));
+			background-image: -o-linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));
+			background-image: linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));
+			border-radius: 5px;
+			&:active {
+				background-image: -webkit-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.5));
+				background-image: -moz-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.5));
+				background-image: -ms-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.5));
+				background-image: -o-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.5));
+				background-image: linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.5));
+			}
+			a {
+				color:#ffffff!important; //Some themes are using a* to target all links
+				text-decoration: none!important; //Some themes are using a* to target all links
+				border:none;
+				&:hover {
+					color:#ffffff!important; //Some themes are using a* to target all links
+				}
+				&:visited {
+					color:#ffffff!important; //Some themes are using a* to target all links
+				}
+			}
+			&.us_no_link {
+				color: #ffffff;
+				&:active {
+					background-image: -webkit-linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));
+					background-image: -moz-linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));
+					background-image: -ms-linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));
+					background-image: -o-linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));
+					background-image: linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));
+				}
+			}
+			.us_share {
+				background-color: transparent;
+				&:hover {
+					background-color: transparent;
+				}
+			}
+		}
+	}
+	&.us_skin_round {
+		a {
+			color:#ffffff!important; //Some themes are using a* to target all links
+			text-decoration: none!important; //Some themes are using a* to target all links
+			border:none;
+			&:hover {
+				color:#ffffff!important; //Some themes are using a* to target all links
+			}
+			&:visited {
+				color:#ffffff!important; //Some themes are using a* to target all links
+			}
+		}
+		.us_button {
+			width: (@us_button_width / 2);
+			line-height: 50px;
+			height: (@us_button_width / 2);
+			background-color: grey;
+			border-radius: 45px;
+			-webkit-transition: width 400ms ease-out;
+			-moz-transition: width 400ms ease-out;
+			-o-transition: width 400ms ease-out;
+			transition: width 400ms ease-out;
+			.us_share {
+				width: (@us_button_width / 2);
+				height: (@us_button_width / 2);
+				border-radius: 45px;
+			}
+			.us_count {
+				width: (@us_button_width / 2);
+				border-radius: 45px;
+			}
+			&.us_no_count {
+				.us_share {
+					width: 100%;
+				}
+			}
+			&.us_names {
+				.us_name {
+					width: 93px;
+				}
+				&:hover {
+					width:183px;
+					.us_count {
+						width: 45px;
+					}
+				}
+			}
+			&:hover {
+				width: @us_button_width;
+				-webkit-transition: width 400ms ease-out;
+				-moz-transition: width 400ms ease-out;
+				-o-transition: width 400ms ease-out;
+				transition: width 400ms ease-out;
+				.us_count {
+					width: (@us_button_width / 2);
+				}
+			}
+		}
+		.us_fan_count {
+			border-radius: 50%;
+			color: white;
+		}
+	}
+	&.us_skin_jet {
+		.us_button, .us_fan_count {
+			font-weight: 400;
+			height: 30px;
+			background: #f8f8f8;
+			border: 1px solid #ccc;
+			box-shadow: 0 1px 0 rgba(0,0,0,.08);
+			text-shadow: none;
+			&:hover {
+				background: #fafafa;
+				border: 1px solid #999;
+				.us_share {
+					background-color: transparent;
+				}
+			}
+			.us_share {
+				background-color: transparent;
+			}
+		}
+		.us_button {
+			border-radius: 3px;
+		}
+		.us_fan_count {
+			border-radius: 5px;
+		}
+	}
+	&.us_skin_easy {
+		.us_button, .us_fan_count {
+			height: 38px;
+			a {
+				color:#ffffff!important; //Some themes are using a* to target all links
+				text-decoration: none!important; //Some themes are using a* to target all links
+				border:none;
+				&:hover {
+					color:#ffffff!important; //Some themes are using a* to target all links
+				}
+				&:visited {
+					color:#ffffff!important; //Some themes are using a* to target all links
+				}
+			}
+			&:active {
+				transition: box-shadow 0ms linear;
+				-webkit-transition: -webkit-box-shadow 0ms linear;
+			}
+			&:hover {
+				.us_share {
+					background-color: transparent;
+				}
+			}
+			.us_share {
+				background-color: transparent;
+			}
+			&.us_no_link {
+				color: #ffffff;
+			}
+		}
+		.us_button {
+			border-radius: 3px;
+			box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+			-webkit-box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+			&:active {
+				box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
+				-webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
+			}
+		}
+		.us_fan_count {
+			border-radius: 5px;
+			box-shadow: inset 0 -8px 0 rgba(0,0,0,0.2);
+			-webkit-box-shadow: inset 0 -8px 0 rgba(0,0,0,0.2);
+			&:active {
+				box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+				-webkit-box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+			}
+		}
+	}
+	.us_total {
+		width: @us_button_width;
+		background-color: transparent!important;
+		background-image: none!important;
+		border:none!important;
+		border-radius:none!important;
+		box-shadow: none!important;
+		&:hover {
+			background-color: transparent!important;
+		}
+		.us_share {
+			font-size: 12px;
+			background-color: transparent!important;
+		}
+	}
+	.us_share_text {
+		cursor:auto;
+	}
+	.us_fan_count_button, .us_button {
+		-webkit-transition: all 400ms ease-out;
+		-moz-transition: all 400ms ease-out;
+		-o-transition: all 400ms ease-out;
+		transition: all 400ms ease-out;
+		&:hover{
+			-webkit-transition: all 400ms ease-out;
+			-moz-transition: all 400ms ease-out;
+			-o-transition: all 400ms ease-out;
+			transition: all 400ms ease-out;
+		}
+	}
+
+	&.us_fan_count_wrapper {
+		.us_fan_count {
+			margin-right: 0;
+			margin-bottom: 0;
+			text-align: center;
+			display: inline-block;
+			width: 100%;
+			height: auto;
+			position: relative;
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			.us_fan_count_button {
+				padding-bottom: 100%;
+				div {
+					position: absolute;
+					top: 15%;
+				    left: 0;
+				    right: 0;
+				    bottom: 0;
+				    &.us_fan_count_holder {
+						top:55%;
+				    }
+				    &.us_fan_count_desc {
+						top:75%;
+				    }
+				}
+			}
+			&.rows-1 {
+				width: 100%;
+			}
+			&.rows-2 {
+				width: 50%;
+			}
+			&.rows-3 {
+				width: 33.333%;
+			}
+			&.rows-4 {
+				width: 25%;
+			}
+			&.rows-5 {
+				width: 20%;
+			}
+		}
+	}
+	.us_display_none {
+		display: none!important;
+	}
+}
+
+.us_floating {
+	position: relative;
+	.us_wrapper {
+		position: fixed;
+		top: 200px;
+		left: 0px;
+		z-index: 10000;
+	}
+	.us_skin_minimal {
+		.us_button {
+			margin-top: -1px;
+		}
+	}
+	.us_button {
+		margin-top: 0;
+		margin-bottom: 0!important;
+		display:block;
+		overflow: hidden;
+		.us_share {
+			width: 45px;
+		}
+		.us_count {
+			width: 45px;
+		}
+		.us_box {
+			width:90px;
+		}
+		&.us_no_count {
+			.us_box {
+				width:100%;
+			}
+			.us_share {
+				width:100%;
+			}
+		}
+		&.us_whatsapp {
+			display: none;
+		}
+	}
+}
+
+.us_pinterest_images {
+	-moz-column-count: 3;
+    -moz-column-gap: 10px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 10px;
+    column-count: 3;
+    column-gap: 10px;
+    .us_pinterest_image_holder {
+		box-sizing:border-box;
+		-moz-box-sizing:border-box;
+		display: inline-block;
+	    width: 100%;
+	//	padding: 5px;
+		img {
+			width: 100%;
+			border-radius: 10px;
+		}
+	}
+}
+
+@media only screen and (max-width : 767px) {
+	.us_mobile_hide {
+		display:none;
+	}
+	.us_floating {
+		.us_button.us_whatsapp {
+			display:block;
+		}
+	}
+	.us_wrapper .us_button.us_whatsapp {
+		display:inline-block;
+	}
+}
+
+@media (min-width:1025px) {
+	.us_desktop_hide {
+		display:none;
+	}
+}
+
+.gc-bubbleDefault, .pls-container{
+   display: none !important;
+}
+
+body > iframe[id*='vkwidget'] {
+	display: none!important;
+}
+
+.us_sticky {
+	position: relative;
+	z-index: 100;
+}
+
+@import 'less/magnific.less';

@@ -1,0 +1,85 @@
+<head profile="http://gmpg.org/xfn/11">
+<title>Mark&#039;s Blog</title>
+<link rel="pingback" href="http://mark.ossdl.de/xmlrpc.php" />
+<link rel="icon" href="http://cdn.ww.ossdl.de/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="http://cdn.ww.ossdl.de/favicon.ico" type="image/x-icon" />
+<link rel="apple-touch-icon" href="http://cdn.ww.ossdl.de/apple-touch-icon.png" type="image/png" />
+<style type="text/css" media="screen">
+body {
+	font-family: Helvetica, sans-serif;
+}
+h1 {
+	color: #5b5b5b;
+	margin: 2em 20px 2em 0;
+	border-bottom: 1px solid #c0c0c0;
+}
+a {
+	color: #5b5b5b;
+	text-decoration: none;
+	vertical-align: baseline;
+}
+hr {
+	clear: both;
+	visibility: hidden;
+}
+#wrap {
+	width: 630px;
+	margin: 0 auto;
+}
+#wrap a {
+	position: relative;
+}
+#wrap .selbox {
+	float: left;
+}
+#wrap div.left {
+	margin-right: 20px;
+}
+.titleLinktext {
+	position: absolute;
+	bottom: 3px;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.6);
+	padding: 9px 12px;
+	width: 256px;
+	font-family: Helvetica, sans-serif;
+}
+img {
+	border: 0;
+}
+#footer {
+	width: 320px; 
+	margin: 10em auto 0;
+	color: #c0c0c0;
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+<h1>Mark&#039;s Blog</h1>
+	<div class="selbox left">
+		<a href="/category/tech/" title="technology-related articles">
+			<div class="titleLinktext">Technology Related (en)</div>
+			<img src="http://cdn.ww.ossdl.de/wp-content/uploads/2011/05/screenshot-coding-thot.jpg" height="220" width="280" />
+		</a><br />
+		<a href="http://feeds.ossdl.de/mark/technology" title="subscribe to RSS feed">RSS</a>
+		| <a href="http://feedburner.google.com/fb/a/mailverify?uri=mark/technology&amp;loc=en_US">Email</a>
+	</div>
+	<div class="selbox right">
+		<a href="/category/self/" title="to my musings">
+			<div class="titleLinktext">Alles Andere (de)</div>
+			<img src="http://cdn.ww.ossdl.de/wp-content/uploads/2011/05/filo-and-the-white-fence-dilemma.jpg" height="220" width="280" />
+		</a><br />
+		<a href="http://feeds.ossdl.de/mark/gedanken" title="Blog als RSS lesen">RSS</a>
+		| <a href="http://feedburner.google.com/fb/a/mailverify?uri=mark/gedanken&amp;loc=de_DE">Email</a>
+	</div>
+	<hr />
+	<div class="entrytext"></div>
+</div>
+<div id="footer">
+	<p>Copyright &copy;&nbsp;2008-2011 W-Mark Kubacki</p>
+</div>
+</body>
+</html>
+
+<!-- Served by WP-SuperCache-Plus - See X-WPSCP response header -->
