@@ -144,6 +144,30 @@ echo '</div>';
 }
 }
 
+function post_chronology () {
+// check if the repeater field has rows of data
+if( have_rows('events') ):
+echo '<h3>Chronology of Events:</h3>';
+
+ 	// loop through the rows of data
+    while ( have_rows('events') ) : the_row();
+
+        // display a sub field value
+              echo '<div class="embed-container-two"><h4>Date: '; 
+       the_sub_field('date');
+       echo '</h4></div>';
+       the_sub_field('event');
+
+
+    endwhile;
+
+else :
+
+    // no rows found
+
+endif;
+}
+
 add_action('genesis_entry_header', 'post_context', 17);
 
 // Social Share Buttons
@@ -163,7 +187,8 @@ echo '</div>';
 }
 
 add_action( 'genesis_entry_header', 'social_share_buttons', 16 );
-add_action( 'genesis_entry_footer', 'social_share_buttons_two', 1 );
+add_action( 'genesis_entry_footer', 'post_chronology', 1 );
+add_action( 'genesis_entry_footer', 'social_share_buttons_two', 5 );
 remove_action( 'genesis_after_entry', 'genesis_do_author_box_single', 8 ); 
 
 add_action('genesis_entry_header', 'theme_author_box', 15);
