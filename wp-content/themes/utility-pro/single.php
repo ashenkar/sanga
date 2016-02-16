@@ -148,7 +148,9 @@ function post_chronology () {
 // check if the repeater field has rows of data
 if( have_rows('events') ):
 echo '<h3>Chronology of Events:</h3>';
-
+if(get_field('chronology_of_events')) {
+the_field('chronology_of_events');
+}
  	// loop through the rows of data
     while ( have_rows('events') ) : the_row();
 
