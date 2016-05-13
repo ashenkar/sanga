@@ -218,9 +218,25 @@ add_action( 'genesis_after_entry' , 'disqusstart', 5);
 
 
 
- 
+ /* Sources - Start */
 
 
+function source_person_excerpt() {
+$post_object = get_field('person');
+if( $source_person ): 
+     echo '<ul>';
+     foreach( $post_objects as $post): setup_postdata($post); 
+     echo '<h1>';
+     echo 'Post Object Custom Field:';
+     the_field('source_name');
+     echo '</h1>';
+     endforeach;
+    echo '</ul>';
+wp_reset_postdata();
+endif;
+	};
+
+add_action( 'genesis_entry_footer', 'source_person_excerpt', 2 );
 
 genesis();    
 

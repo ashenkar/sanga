@@ -1,9 +1,19 @@
 <?php
 
 class BVDynamicBackup {
-	function BVDynamicBackup() {
+	/**
+	 * PHP5 constructor.
+	 */
+	function __construct() {
 		$this->add_actions_and_listeners();
 		$this->reset_events();
+	}
+
+	/**
+	 * PHP4 constructor.
+	 */
+	function BVDynamicBackup() {
+		BVDynamicBackup::__construct();
 	}
 
 	static public function &init() {

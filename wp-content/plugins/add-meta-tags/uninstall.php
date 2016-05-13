@@ -19,7 +19,7 @@
  *
  *  Licensing Information
  *
- *  Copyright 2006-2013 George Notaras <gnot@g-loaded.eu>, CodeTRAX.org
+ *  Copyright 2006-2016 George Notaras <gnot@g-loaded.eu>, CodeTRAX.org
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,6 +43,4 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-delete_option('add_meta_tags_opts');
-
-?>
+// delete_option('add_meta_tags_opts');

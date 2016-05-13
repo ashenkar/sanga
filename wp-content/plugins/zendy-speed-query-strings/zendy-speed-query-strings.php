@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: Zendy Speed: Query Strings
-Plugin URI: https://kauai.zendy.net/wordpress/plugins/zendy-speed/
+Plugin URI: https://kauai.zendy.net/wordpress/plugins/
 Description: Remove query strings from static resources; improve your website performance and your performace grade on YSlow, Google PageSpeed, and Pingdom.
 Author: Zendy Web Studio
-Version: 2.0.1
+Version: 2.0.4
 Author URI: https://kauai.zendy.net
 */
 

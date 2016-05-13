@@ -11,8 +11,18 @@ class BlogVault {
 		return self::$instance;
 	}
 
-	function BlogVault() {
+	/**
+	* PHP5 constructor.
+	*/
+	function __construct() {
 		$this->status = array("blogvault" => "response");
+	}
+
+	/**
+	 * PHP4 constructor.
+	 */
+	function BlogVault() {
+		BlogVault::__construct();
 	}
 
 	function addStatus($key, $value) {
@@ -100,12 +110,70 @@ class BlogVault {
 		return $fdata;
 	}
 
-	function scanFiles($initdir = "./", $offset = 0, $limit = 0, $bsize = 512) {
+	function scanFilesUsingGlob($initdir = "./", $offset = 0, $limit = 0, $bsize = 512, $regex = '{.??,}*') {
 		$i = 0;
-		$j = 0;
 		$dirs = array();
 		$dirs[] = $initdir;
-		$j++;
+		$bfc = 0;
+		$bfa = array();
+		$current = 0;
+		$recurse = true;
+		if (array_key_exists('recurse', $_REQUEST) && $_REQUEST["recurse"] == "false") {
+			$recurse = false;
+		}
+		$clt = new BVHttpClient();
+		if (strlen($clt->errormsg) > 0) {
+			return false;
+		}
+		$abspath = realpath(ABSPATH).'/';
+		$abslen = strlen($abspath);
+		$url = $this->getUrl("listfiles")."&recurse=".$_REQUEST["recurse"]."&offset=".$offset."&initdir=".urlencode($initdir)."&regex=".urlencode($regex);
+		$clt->uploadChunkedFile($url, "fileslist", "allfiles");
+		while ($i < count($dirs)) {
+			$dir = $dirs[$i];
+
+			foreach (glob($abspath.$dir.$regex, GLOB_NOSORT | GLOB_BRACE) as $absfile) {
+				$relfile = substr($absfile, $abslen);
+				if (is_dir($absfile) && !is_link($absfile)) {
+					$dirs[] = $relfile."/";
+				}
+				$current++;
+				if ($offset >= $current)
+					continue;
+				if (($limit != 0) && (($current - $offset) > $limit)) {
+					$i = count($dirs);
+					break;
+				}
+				$bfa[] = $this->fileStat($relfile);
+				$bfc++;
+				if ($bfc == $bsize) {
+					$str = serialize($bfa);
+					$clt->newChunkedPart(strlen($str).":".$str);
+					$bfc = 0;
+					$bfa = array();
+				}
+			}
+			$regex = '{.??,}*';
+			$i++;
+			if ($recurse == false)
+				break;
+		}
+		if ($bfc != 0) {
+			$str = serialize($bfa);
+			$clt->newChunkedPart(strlen($str).":".$str);
+		}
+		$clt->closeChunkedPart();
+		$resp = $clt->getResponse();
+		if (array_key_exists('status', $resp) && ($resp['status'] != '200')) {
+			return false;
+		}
+		return true;
+	}
+
+	function scanFiles($initdir = "./", $offset = 0, $limit = 0, $bsize = 512) {
+		$i = 0;
+		$dirs = array();
+		$dirs[] = $initdir;
 		$bfc = 0;
 		$bfa = array();
 		$current = 0;
@@ -118,7 +186,7 @@ class BlogVault {
 			return false;
 		}
 		$clt->uploadChunkedFile($this->getUrl("listfiles")."&recurse=".$_REQUEST["recurse"]."&offset=".$offset."&initdir=".urlencode($initdir), "fileslist", "allfiles");
-		while ($i < $j) {
+		while ($i < count($dirs)) {
 			$dir = $dirs[$i];
 			$d = @opendir(ABSPATH.$dir);
 			if ($d) {
@@ -128,13 +196,12 @@ class BlogVault {
 					$absfile = ABSPATH.$relfile;
 					if (is_dir($absfile) && !is_link($absfile)) {
 						$dirs[] = $relfile."/";
-						$j++;
 					}
 					$current++;
 					if ($offset >= $current)
 						continue;
 					if (($limit != 0) && (($current - $offset) > $limit)) {
-						$i = $j;
+						$i = count($dirs);
 						break;
 					}
 					$bfa[] = $this->fileStat($relfile);
@@ -343,6 +410,13 @@ class BlogVault {
 	function updateDailyPing($value) {
 		if(update_option("bvDailyPing", $value)) {
 			return $value;
+		}
+		return "failed";
+	}
+
+	function disableBadge() {
+		if(update_option("bvBadgeInFooter", "false")) {
+			return "false";
 		}
 		return "failed";
 	}
@@ -683,6 +757,14 @@ class BlogVault {
 			$bsize = intval(urldecode($_REQUEST['bsize']));
 			$this->addStatus("status", $this->scanFiles($initdir, $offset, $limit, $bsize));
 			break;
+		case "scanfilesglob":
+			$initdir = urldecode($_REQUEST['initdir']);
+			$offset = intval(urldecode($_REQUEST['offset']));
+			$limit = intval(urldecode($_REQUEST['limit']));
+			$bsize = intval(urldecode($_REQUEST['bsize']));
+			$regex = urldecode($_REQUEST['regex']);
+			$this->addStatus("status", $this->scanFilesUsingGlob($initdir, $offset, $limit, $bsize, $regex));
+			break;
 		case "setdynsync":
 			$this->updateOption('bvDynSyncActive', $_REQUEST['dynsync']);
 			break;
@@ -875,6 +957,9 @@ class BlogVault {
 		case "updatedailyping":
 			$value = $_REQUEST['value'];
 			$this->addStatus("bvDailyPing", $this->updateDailyPing($value));
+			break;
+		case "disablebadge":
+			$this->addStatus("disablebadge", $this->disableBadge());
 			break;
 		default:
 			$this->addStatus("statusmsg", "Bad Command");

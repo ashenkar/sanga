@@ -2,7 +2,7 @@
 Contributors: wpengine, blogvault, akshatc, taylor4484
 Tags: wpe, wpengine, migration
 Requires at least: 3.0.1
-Tested up to: 4.4
+Tested up to: 4.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -78,6 +78,12 @@ That's easy! [Signup here](http://wpengine.com/plans/).
 2. BlogVault dashboard showing live updates.
 
 == Changelog ==
+= 1.22 =
+* Adding support for GLOB based directory listings
+
+= 1.21 =
+* Adding support for PHP 5 style constructors
+
 = 1.20 =
 * Adding DB Signature and Server Signature to uniquely identify a site
 * Adding the stats api to the WordPress Backup plugin.

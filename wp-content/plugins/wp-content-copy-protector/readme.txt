@@ -3,7 +3,7 @@ Contributors: wp-buy
 Donate link: http://goo.gl/UJVpbi
 Tags: content, content copy protection, content protection, copy protection, prevent copy, protect blog, image protect, image protection, no right click, plagiarism, secure content, content theft
 Requires at least: 2.5
-Tested up to: 4.3
+Tested up to: 4.5
 Stable tag: trunk
 
 This wp plugin protect the posts content from being copied by any other web site author (content copy protection) , you dont want your content to spread without your permission!!
@@ -30,6 +30,9 @@ your posts extremely simple without yelling at your readers</li>
 
 **The Pro Edition Features include:**
 <ul>
+<li>Watermarking</li>
+<li>Using htacsess rules</li>
+<li>Support jquery overlay protection</li>
 <li>Get full Control on Right click or context menu</li>
 <li>Show alert messages, when user made right click on images, text boxes, links, plain text.. etc</li>
 <li>Admin can exclude Home page Or Single posts from being copy protected </li>
@@ -40,7 +43,7 @@ your posts extremely simple without yelling at your readers</li>
 <li>compatible with all major browsers</li>
 <li>Tested in IE9, IE10, Firefox, Google Chrome, Opera</li>
 <li>Disables image drag and drop function</li>
-<li>Works on smart phones. (except iphones - will be solved soon)</li>
+<li>Works on smart phones and iphones - solved since 2-10-2015 & updated at 13-11-2015</li>
 <li>Ability to set varying levels of protection per page or post.</li>
 </ul>
 
@@ -58,6 +61,16 @@ your posts extremely simple without yelling at your readers</li>
 </ul>
 
 == Changelog ==
+= 1.5.0.5 =
+<ul>
+<li>Internet Explorer important hotfix</li>
+<li>Testing on wordpress 4.4.2 new version</li>
+</ul>
+= 1.5.0.4 =
+<ul>
+<li>Auto remove image url's</li>
+<li>Fix javascript errors</li>
+</ul>
 = 1.5.0.3 =
 <ul>
 <li>Adding adminbar link and icon redirecting you to the plugin settings page</li>

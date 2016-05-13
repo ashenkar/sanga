@@ -3,9 +3,10 @@
 Plugin Name: Featured Images in RSS w/ Size and Position
 Plugin URI: http://wordpress.org/plugins/featured-images-for-rss-feeds/
 Description: Adds featured images from posts to your site's RSS feed output, with featured image size and CSS positioning options.
-Author: Rob Marlbrough
-Version: 1.3.6
-Author URI: http://webwizards.net/wordpress/
+Author: Press Wizards
+Version: 1.3.7
+Author URI: http://presswizards.com/wordpress/
+Text Domain: features-images-for-rss-feeds
 */
 
 // Adding WordPress plugin action links
@@ -14,6 +15,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'firss_add_plu
 function firss_add_plugin_action_links( $links ) {
 	return array_merge(
 		array(
+			'donate' => '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4SE22RQ4CB2E">Donate Now</a>',
 			'settings' => '<a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/options-general.php?page=firss_settings">Settings</a>'
 		),
 		$links
@@ -99,9 +101,9 @@ function firss_settings_page() {
 	?>
 	<div class="wrap">
 		<h2>Featured Images In RSS Feeds</h2>
-		<h3>by <a href=http://twitter.com/WebWizards target=_blank>Rob Marlbrough</a>, <a href=http://webwizards.net/wordpress/ target=_blank>Web Wizards WordPress Services</a></h3>
-		<h4>In partnership with <a href=http://fandommarketing.com/ target=_blank>Fandom Marketing Social Media Services</a></h4>
-		<h4>Want to hire us for WordPress work? <a href=http://webwizards.net/wordpress/ target=_blank>Contact us</a>.</h4>
+		<h3>by <a href=http://twitter.com/PressWizards target=_blank>Rob Marlbrough</a>, <a href=http://presswizards.com/wordpress/ target=_blank>Press Wizards WordPress Development</a></h3>
+		<h4>In partnership with <a href=http://fandommarketing.com/ target=_blank>Fandom Marketing Social and Digital Marketing Agency</a></h4>
+		<h4>We can help with WordPress design, maintenance, and development: <a href=http://presswizards.com/wordpress/ target=_blank>Contact us</a></h4>
 		<form method="post" action="options.php">
 			<?php settings_fields( 'firss-settings-group' ); ?>
 			<table class="form-table">
@@ -136,11 +138,11 @@ function firss_settings_page() {
 		    <p class="submit"><input type="submit" name="submit-bpu" class="button-primary" value="<?php _e('Save Changes') ?>" /></p>
 		</form>
 		Here's your site's RSS feed for viewing/troubleshooting: <a href=/feed/ target=_blank><?php echo site_url(); ?>/feed/</a>
-		<BR />- If it redirects to the Feedburner feed you may need to disable that for this plugin to work
+		<BR />- If it redirects to the Feedburner feed you may need to disable that for this plugin to work.
 		<BR />- We recommend using this Chrome extension to view your feed as HTML: <a href=https://chrome.google.com/webstore/detail/rss-subscription-extensio/nlbjncdgjeocebhnmkbbbdekmmmcbfjd target=_blank>RSS Subscription Extension (by Google)</a>
-		<BR />- Clear your browser cache [usually shift-reload] to view RSS feed changes. Note that Feedburner caches feeds, you should <a href=http://feedburner.google.com/fb/a/pingSubmit?bloglink=<?php echo site_url(); ?> target=_blank>Ping Feedburner</a> so it updates your feed
-		<p />Please <a href=http://wordpress.org/support/view/plugin-reviews/featured-images-for-rss-feeds?rate=5#postform target=_blank>Rate and Review</a> so others can benefit from your experiences with it. Share on your social networks, too.
+		<BR />- Clear your browser cache [usually shift-reload] to view RSS feed changes. Note that Feedburner caches feeds, you should <a href=http://feedburner.google.com/fb/a/pingSubmit?bloglink=<?php echo site_url(); ?> target=_blank>Ping Feedburner</a> so it updates your feed.
+		<p /><a target=_blank href=https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4SE22RQ4CB2E>Donate</a> now to drive development and get the features you want. If this plugin saved you time, perhaps send a donation with an amount you feel your time is worth, or just say thanks. :)
+		<BR />Please <a href=http://wordpress.org/support/view/plugin-reviews/featured-images-for-rss-feeds?rate=5#postform target=_blank>Rate and Review</a> so others can benefit from your experiences with it. Share on your social networks, too.
 		<BR />Please <a href=http://wordpress.org/support/plugin/featured-images-for-rss-feeds target=_blank>submit a new Support Thread</a> for troubleshooting help or feature requests.
-		<BR />If this plugin saved you time, perhaps send a <a target=_blank href=https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4SE22RQ4CB2E>donation</a> with an amount you feel your time is worth, if you'd like to encourage future development, or just say thanks. :-)
 	</div>
 <?php } ?>

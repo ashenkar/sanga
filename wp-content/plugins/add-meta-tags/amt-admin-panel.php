@@ -19,7 +19,7 @@
  *
  *  Licensing Information
  *
- *  Copyright 2006-2013 George Notaras <gnot@g-loaded.eu>, CodeTRAX.org
+ *  Copyright 2006-2016 George Notaras <gnot@g-loaded.eu>, CodeTRAX.org
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -69,14 +69,12 @@ function amt_admin_init() {
 
     // Perform automatic settings upgrade based on settings version.
     // Also creates initial default settings automatically.
-    amt_plugin_upgrade();
+    // NOTE: Reverted back to the test performed in amt-settings.php, because otherwise
+    // the ``is_array($options) && array_has_key('foo', $options)`` should be performed
+    // every time a setting value is retrieved from the settings array.
+    //amt_plugin_upgrade();
 
     // Register scripts and styles
-
-    /* Register our script for the color picker. */
-    // wp_register_script( 'myPluginScript', plugins_url( 'script.js', AMT_PLUGIN_FILE ) );
-    /* Register our stylesheet. */
-    wp_register_style( 'amt_settings', plugins_url( 'css/amt-settings.css', AMT_PLUGIN_FILE ) );
 
 }
 add_action( 'admin_init', 'amt_admin_init' );
@@ -92,17 +90,35 @@ function amt_admin_menu() {
 add_action( 'admin_menu', 'amt_admin_menu');
 
 
-/** Enqueue scripts and styles
- *  From: http://codex.wordpress.org/Plugin_API/Action_Reference/admin_enqueue_scripts#Example:_Target_a_Specific_Admin_Page
- */
+//
+// Enqueue scripts and styles
+// From: http://codex.wordpress.org/Plugin_API/Action_Reference/admin_enqueue_scripts#Example:_Target_a_Specific_Admin_Page
+//
 function amt_enqueue_admin_scripts_and_styles( $hook ) {
     //var_dump($hook);
     if ( 'settings_page_add-meta-tags-options' != $hook ) {
         return;
     }
-    // Enqueue script and style for the color picker.
-    //wp_enqueue_script( 'myPluginScript' );
+
+    // Using included Jquery
+    wp_enqueue_script('jquery');
+
+    // Necessary for the media selector.
+    // https://codex.wordpress.org/Javascript_Reference/wp.media
+    wp_enqueue_media();
+
+    // Register our stylesheet.
+    wp_register_style( 'amt_settings', plugins_url( 'css/amt-settings.css', AMT_PLUGIN_FILE ) );
+
+    // Enqueue style.
     wp_enqueue_style( 'amt_settings' );
+
+    // Register Add-Meta-Tags admin scripts
+    wp_register_script( 'amt_image_selector_script', plugins_url( 'js/amt-image-selector.js', AMT_PLUGIN_FILE ), array('jquery') );
+
+    // Enqueue the Add-Meta-Tags Admin Scripts
+    wp_enqueue_script( 'amt_image_selector_script' );
+
 }
 add_action( 'admin_enqueue_scripts', 'amt_enqueue_admin_scripts_and_styles' );
 // Note: `admin_print_styles` should not be used to enqueue styles or scripts on the admin pages. Use `admin_enqueue_scripts` instead. 
@@ -132,7 +148,15 @@ function amt_admin_help_tabs() {
 
     // Introduction
     $help_text = '
+    <h2>'.__('Introduction to metadata', 'add-meta-tags').'</h2>
+
     <p>'.__('<em>Metadata</em> refers to information that describes the content in a machine-friendly way. Search engines and other online services use this metadata to better understand your content. Keep in mind that metadata itself does not automatically make your blog rank better. For this to happen the content is still required to meet various quality standards. However, the presence of accurate and adequate metadata gives search engines and other services the chance to make less guesses about your content, index and categorize it better and, eventually, deliver it to an audience that finds it useful.  Good metadata facilitates this process and thus plays a significant role in achieving better rankings. This is what the Add-Meta-Tags plugin does.', 'add-meta-tags').'</p>
+
+    <h2>'.__('Add-Meta-Tags mission', 'add-meta-tags').'</h2>
+
+    <p>'.__('Add-Meta-Tags is a Free metadata plugin for the WordPress Publishing Platform that can optimize your web site for more efficient indexing of your content by search engines and easier sharing on social networks. It achieves this by generating machine friendly information about your content, called <em>metadata</em>, according to widely used standard specifications.', 'add-meta-tags').'</p>
+
+    <p>'.__('<em>Add Meta Tags</em> is a great tool to assist you with the search engine optimization (<em>SEO</em>) of your web site. However, neither the plugin nor its developer provide you with any SEO advice or rating of your content. Any decision regarding SEO is still your own responsibility and subject to your own research. This is by design.', 'add-meta-tags').'</p>
 
     <h2>'.__('How it works', 'add-meta-tags').'</h2>
         
@@ -176,6 +200,8 @@ function amt_admin_help_tabs() {
     <p><code>&lt;meta property="fb:admins" content="1234" /&gt;</code></p>
     <p><code>&lt;meta property="fb:app_id" content="4321" /&gt;</code></p>
 
+    <p>'.__('Moreover, the full meta tags box accepts the special notation <code>[field=Field Name]</code> which lets you use data from a Custom Field with name <em>Field Name</em>. This special notation may exist anywhere inside the meta tag. To automatically add paging information to URLs, append the <code>PAGEINFO</code> placeholder.', 'add-meta-tags').'</p>
+
     ';
     $screen->add_help_tab( array(
         'id'	=> 'amt_help_general',
@@ -208,6 +234,34 @@ function amt_admin_help_tabs() {
         'content'	=> $help_text,
     ) );
 
+    // Author Settings
+    $help_text = '
+    <p>'.__('This section contains options related to the authors of the content.', 'add-meta-tags').'</p>
+
+    <h3>'.__('URLs of author profiles on social networks', 'add-meta-tags').':</h3>
+
+    <p>'.__('Each author may fill in the the URLs of the profiles on external social networks in the WordPress user profile page (fields marked with <em>AMT</em>).', 'add-meta-tags').'</p>
+
+    <h3>'.__('Main source of local author profiles', 'add-meta-tags').':</h3>
+
+    <p>'.__('WordPress does not have a dedicated page for author or user profiles. By convention, Add-Meta-Tags considers the first page of the author archive as the page of the local profile of each author.', 'add-meta-tags').'</p>
+
+    <p>'.__('It is possible to select alternative sources of local author profiles:', 'add-meta-tags').'</p>
+
+    <ul>
+    <li>'.__('First page of the author archive', 'add-meta-tags').' &mdash; '.__('This is the default option. The first page of the author archive is considered as the page of the local author profile on which a <em>Person</em> metadata entity is the top level metadata object. Moreover, the front page is considered the page on which the <em>Organization</em> metadata entity is the top level metadata object.', 'add-meta-tags').'</li>
+    <li>'.__('Front page (with static page only)', 'add-meta-tags').' &mdash; '.__('This option is only useful on personal web sites where there is a single author. If the front page is set as the source of the local author profile, then a <em>Person</em> metadata entity is the top level metadata object on the front page, instead of the <em>Organization</em> metadata object. In fact, no <em>Organization</em> metadata object is generated on any web page. Please note that this option has an effect only if a static page has been set as the front page.', 'add-meta-tags').'</li>
+    <li>'.__('BuddyPress profile page', 'add-meta-tags').' &mdash; '.__('This option is only useful if BuddyPress is used. In this case, the author\'s BuddyPress profile page is considered as the source of the local author profile, instead of the first page of the author archive. The generation of metadata on BuddyPress pages by this plugin has to be enabled in the <em>Extended Metadata</em> settings.', 'add-meta-tags').'</li>
+    <li>'.__('Author web site URL', 'add-meta-tags').' &mdash; '.__('If this option is selected, then the URL of the <em>Website</em> field of the WordPress user profile is considered to be the URL of the local author profile, regardless of the fact that the URL may lead to a third party web site.', 'add-meta-tags').'</li>
+    </ul>
+
+    <p>'.__('This is considered an advanced option and should not be changed, unless you know exactly what you are doing.', 'add-meta-tags').'</p>';
+    $screen->add_help_tab( array(
+        'id'	=> 'amt_help_authors',
+        'title'	=> __('Author Settings', 'add-meta-tags'),
+        'content'	=> $help_text,
+    ) );
+
     // Basic Meta Tags
     // Open Graph Generator
     $help_text = '
@@ -229,6 +283,10 @@ function amt_admin_help_tabs() {
     <h3>'.__('Automatically generate Opengraph meta tags.', 'add-meta-tags').'</h3>
 
     <p>'.__('If this option is enabled, Opengraph metadata is automatically generated for content, attachments and archives. For more information, please refer to the <a href="http://ogp.me">Opengraph specification</a>.', 'add-meta-tags').'</p>
+
+    <h3>'.__('Add Facebook\'s XML namespaces.', 'add-meta-tags').'</h3>
+
+    <p>'.__('When enabled, the Facebook\'s XML namespaces for the <code>og</code> and <code>fb</code> meta tag name prefixes are added to the <code>html</code> element of the page. If your theme already contains these namespaces, then this option should not be enabled.', 'add-meta-tags').'</p>
 
     <h3>'.__('Omit <code>og:video</code> meta tags.', 'add-meta-tags').'</h3>
 
@@ -282,7 +340,12 @@ function amt_admin_help_tabs() {
     $help_text = '
         <h3>'.__('Automatically generate Dublin Core metadata.', 'add-meta-tags').'</h3>
 
-        <p>'.__('If this option is enabled, Dublin Core metadata is automatically generated for your content and attachments. For more information, please refer to <a href="http://dublincore.org">Dublin Core Metadata Initiative</a>.', 'add-meta-tags').'</p>';
+        <p>'.__('If this option is enabled, Dublin Core metadata is automatically generated for your content and attachments. For more information, please refer to <a href="http://dublincore.org">Dublin Core Metadata Initiative</a>.', 'add-meta-tags').'</p>
+
+        <h3>'.__('Add the Dublin Core XML namespace.', 'add-meta-tags').'</h3>
+
+        <p>'.__('When enabled, the Dublin Core XML namespace for the <code>dcterms</code> prefix is added to the <code>html</code> element of the page. If your theme already contains this namespace, then this option should not be enabled.', 'add-meta-tags').'</p>';
+
     $screen->add_help_tab( array(
         'id'	=> 'amt_help_metadata_dublin_core',
         'title'	=> __('Dublin Core', 'add-meta-tags'),
@@ -377,9 +440,11 @@ function amt_admin_help_tabs() {
 
     <p>'.__('It is possible to set a custom title for the content in the relevant field of the \'Metadata\' box in the post editing screen. By default, this custom title is used to modify the <code>title</code> HTML element only. Add-Meta-Tags still uses the default content title in the relevant generated meta tags, for example in <code>og:title</code>/<code>twitter:title</code>/<code>dcterms:title</code>. If this option is enabled, then Add-Meta-Tags uses the custom title of the content, if such a custom title has been set, in the the generated meta data, instead of the default title.', 'add-meta-tags').'</p>
 
-    <h3>'.__('Enable advanced SEO title management.', 'add-meta-tags').'</h3>
+    <h3>'.__('Enable advanced title management.', 'add-meta-tags').'</h3>
 
     <p>'.__('By enabling this option, Add-Meta-Tags generates the title that is used in the <code>title</code> HTML element and also the title that is used throughout the generated metadata according to user defined templates. The <em>Add-Meta-Tags Cookbook</em> has all the information you need about <a target="_blank"  href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Advanced_Title_Management">how to customize the generated titles</a>.', 'add-meta-tags').'</p>
+
+    <p>'.__('Please make sure to check the <a href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Requirements#Advanced-Title-Management" target="_blank">theme requirements</a> before enabling this feature.', 'add-meta-tags').'</p>
 
     <h3>'.__('Copyright URL', 'add-meta-tags').'</h3>
 
@@ -388,8 +453,12 @@ function amt_admin_help_tabs() {
 
     <h3>'.__('Default Image', 'add-meta-tags').'</h3>
 
-    <p>'.__('Enter an absolute URL to an image that represents your website, for instance the logo. This image will be used in the metadata of the front page and also in the metadata of the content, in case no featured image or other images have been attached or embedded.', 'add-meta-tags').'</p>
+    <p>'.__('Enter an absolute URL to an image that represents your website, for instance the logo. This image will be used in the metadata of the front page and also in the metadata of the content, in case no featured image or other images have been attached or embedded. To specify the image dimensions you can use the special notation <code>URL,WIDTHxHEIGHT</code>.', 'add-meta-tags').'</p>
     <p><strong>'.__('Example', 'add-meta-tags').'</strong>: <code>http://example.org/images/logo.png</code></p>
+
+    <h3>'.__('Shortcodes', 'add-meta-tags').'</h3>
+
+    <p>'.__('Enforce the expansion of shortcodes before generating a description.', 'add-meta-tags').'</p>
 
     <h3>'.__('Secure Access', 'add-meta-tags').'</h3>
 
@@ -403,19 +472,17 @@ function amt_admin_help_tabs() {
 
     <p>'.__('By default, metadata is generated for all media files that have been attached or embedded in the content. By enabling this option Add-Meta-Tags will generate metadata only for the first media file of each type (image, video, audio) it encounters. This limit does not affect the <code>gallery</code> Twitter Card, which always contains all the attached images.', 'add-meta-tags').'</p>
 
-    <h3>'.__('Extended Metadata Support', 'add-meta-tags').'</h3>
-
-    <p>'.__('Add-Meta-Tags supports the generation of metadata for products and other post types. Please enable any of the following generators of extended metadata.', 'add-meta-tags').'</p>
-
-    <ul>
-    <li>'.__('Metadata for WooCommerce products and product groups.', 'add-meta-tags').'</li>
-    <li>'.__('Metadata for Easy-Digital-Downloads products and product groups.', 'add-meta-tags').' (<span style="color:red;">'.__('Work in progress', 'add-meta-tags').'</span>)</li>
-    </ul>
-    <p>'.__('Please note that if none of the supported products or other supported post types can be detected, the above settings do not affect the plugin\'s normal functionality.', 'add-meta-tags').'</p>
-
     <h3>'.__('Review Mode', 'add-meta-tags').'</h3>
 
     <p>'.__('If enabled, WordPress users with administrator privileges see a box (right above the post\'s content) containing the metadata exactly as it is added in the HTML head and body. The box is displayed for posts, pages, attachments and custom post types.', 'add-meta-tags').'</p>
+
+    <h3>'.__('Enable keyword analysis and statistics', 'add-meta-tags').'</h3>
+
+    <p>'.__('If enabled, a section containing <a href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Metadata_Overview">statistical information</a> about the metadata and the content is also displayed in the review mode panel.', 'add-meta-tags').'</p>
+
+    <h3>'.__('Omit help messages and notices', 'add-meta-tags').'</h3>
+
+    <p>'.__('If enabled, help messages and other notices are no longer displayed in the metadata review panel.', 'add-meta-tags').'</p>
 
     ';
     $screen->add_help_tab( array(
@@ -423,6 +490,83 @@ function amt_admin_help_tabs() {
         'title'	=> __('Extra settings', 'add-meta-tags'),
         'content'	=> $help_text,
     ) );
+
+    // Extended Metadata
+    $help_text = '
+    <p>'.__('This section contains information about the metadata Add-Meta-Tags can generate for third party content.', 'add-meta-tags').'</p>
+
+    <h3>'.__('Metadata for WooCommerce', 'add-meta-tags').'</h3>
+
+    <p>'.__('Add-Meta-Tags can generate metadata for WooCommerce products and product groups. The Basic, Opengraph, Twitter Cards, Schema.org microdata and Schema.org JSON+LD metadata generators have been implemented.', 'add-meta-tags').'</p>
+    <p>'.__('The generated metadata is complete and supports most of the properties of products and offers, except shipping related information. Product attributes are also supported. In some cases, you will have to override the associations between the names of product attributes the plugin expects and the names of product attributes that are actually used.', 'add-meta-tags').'</p>
+    <p>'.__('Products with regular and sales prices are supported. Variable products and pages of product groups are also supported.', 'add-meta-tags').'</p>
+    <p>'.__('The metadata generators for WooCommerce products should be considered stable. However, your comments and suggestions are welcome.', 'add-meta-tags').'</p>
+
+    <h3>'.__('Metadata for Easy Digital Downloads', 'add-meta-tags').'</h3>
+
+    <p>'.__('Support for the products and product groups of the Easy Digital Downloads plugin is still work in progress. If enabled, product and product group pages will contain basic product related metadata.', 'add-meta-tags').'</p>
+
+    <h3>'.__('Metadata for BuddyPress', 'add-meta-tags').'</h3>
+
+    <p>'.__('Add-Meta-Tags can generate metadata for BuddyPress member profile pages. The Basic, Opengraph, Twitter Cards, Schema.org microdata and Schema.org JSON+LD metadata generators have been implemented.', 'add-meta-tags').'</p>
+
+    <p>'.__('If the <em>Extended Profiles</em> component has not been activated in BuddyPress, then metadata is generated based on the information found in the WordPress user profile.', 'add-meta-tags').'</p>
+
+    <p>'.__('Please consult the <a href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Custom_Content#Metadata-for-BuddyPress" target="_blank">wiki documentation about BuddyPress</a> for more information about how to modify or extend the generated metadata, override the default field map or prevent profile metadata from being added to the profile page.', 'add-meta-tags').'</p>
+
+    <p>'.__('How to fully take advantage of this feature:', 'add-meta-tags').'</p>
+
+    <ol>
+    <li>'.__('Enable BuddyPress support in the Add-Meta-Tags settings.', 'add-meta-tags').'</li>
+    <li>'.__('Set the source of local author profiles to <code>BuddyPress</code> in the Add-Meta-Tags settings.', 'add-meta-tags').' (<em>'.__('Optional', 'add-meta-tags').'</em>)</li>
+    <li>'.__('Use the <code>amt_local_author_profile_url()</code> template tag in your theme templates in order to generate a URL to the author\'s profile. This template tag takes your selection about the source of local author profiles into account.', 'add-meta-tags').' (<em>'.__('Optional', 'add-meta-tags').'</em>)</li>
+    </ol>
+
+    <p>'.__('This is a new feature and should be considered work in progress.', 'add-meta-tags').'</p>
+
+    <h3>'.__('Metadata for bbPress', 'add-meta-tags').'</h3>
+
+    <p>'.__('Metadata for bbPress forums and topics should be generated out of the box. More specific forum metadata has not been implemented yet.', 'add-meta-tags').'</p>
+
+    <p>'.__('Currently, only the base mechanism exists, which lets you <a href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Custom_Content#Metadata-for-BuddyPress" target="_blank">modify or extend</a> metadata for bbPress forums and topics.', 'add-meta-tags').'</p>
+
+    <p>'.__('Please, don\'t forget to contribute your customizations to this project!', 'add-meta-tags').'</p>
+
+    ';
+    $screen->add_help_tab( array(
+        'id'	=> 'amt_help_extended_metadata',
+        'title'	=> __('Extended Metadata', 'add-meta-tags'),
+        'content'	=> $help_text,
+    ) );
+
+    // Metadata caching
+    $help_text = '
+    <p>'.__('This section contains basic information about the <em>metadata caching</em> feature. For more details about how metadata caching works in Add-Meta-Tags, troubleshooting notes and also helpful information that aims to help you decide whether you need to enable this feature or not can be found in the <a target="_blank" href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Performance#Metadata-Caching">Performance</a> page of the wiki.', 'add-meta-tags').'</p>
+
+    <p>'.__('Metadata caching is the last thing you should care about while configuring this plugin. You should consider enabling it only after you have finished configuring the rest of the settings.', 'add-meta-tags').'</p>
+
+    <h3>'.__('Notice', 'add-meta-tags').'</h3>
+
+    <p>'.__('Metadata caching is an experimental feature, which should only be used by experienced WordPress users. If you are a WordPress beginner or if you don\'t have enough knowledge about the concept of caching and, especially, if you have followed instructions without having understood how this works, please keep this feature turned off, read this section of the documentation and also the <a target="_blank" href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Performance#Metadata-Caching">Performance</a> page of the wiki carefully and ask any questions you might have before enabling it. Even if you do otherwise, your web site is not going to be harmed in any way, but it is always a good idea to have a good understanding about how things work.', 'add-meta-tags').'</p>
+
+    <h3>'.__('Show timing information', 'add-meta-tags').'</h3>
+
+    <p>'.__('If this option is enabled, information about the total time that was required to generate a block of metadata is printed. This feature, generally, should not be enabled, unless you want an indication of the metadata generation times in each request.', 'add-meta-tags').'</p>
+
+    <h3>'.__('Enable metadata caching', 'add-meta-tags').'</h3>
+
+    <p>'.__('Metadata caching can be enabled by setting the <em>caching timeout</em>, which is the number of seconds for which the metadata should be cached, to a number greater than zero. The cache is cleared every time you save the Add-Meta-Tags settings or from the command line using the <code>amt</code> command of <code>wp-cli</code>.', 'add-meta-tags').'</p>
+
+    <p>'.__('The full documentation of this feature has been moved to the <a target="_blank" href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Performance#Metadata-Caching">Performance</a> page of the wiki. It is highly recommended to thoroughly study this document before enabling metadata caching.', 'add-meta-tags').'</p>
+
+    ';
+    if ( apply_filters('amt_enable_metadata_cache', true) ) {
+        $screen->add_help_tab( array(
+            'id'	=> 'amt_help_metadata_caching',
+            'title'	=> __('Metadata caching', 'add-meta-tags'),
+            'content'	=> $help_text,
+        ) );
+    }
 
     // Advanced Customization
     $help_text = '
@@ -453,9 +597,16 @@ function amt_options_page() {
 
         // Save the Add-Meta-Tags settings
         amt_save_settings($_POST);
+
         // Also, since it may happen that the rewrite rules have not been flushed
         // this is a good place to do it.
         flush_rewrite_rules();
+
+        // Also, clear the metadata cache automatically on every save.
+        $result = amt_delete_all_transient_metadata_cache();
+        if ( intval($result) > 0 ) {
+            amt_show_info_msg( sprintf(__('Deleted %d transient metadata cache entries.', 'add-meta-tags'), $result) );
+        }
 
     } elseif (isset($_POST["info_reset"])) {
 
@@ -470,7 +621,12 @@ function amt_options_page() {
     /*
     Configuration Page
     */
-    
+
+    print('
+    <!-- #add-meta-tags-settings is required by the media selector -->
+    <span id="add-meta-tags-settings">    
+    ');
+
     print('
     <div class="wrap">
         <div id="icon-options-general" class="icon32"><br /></div>
@@ -488,28 +644,13 @@ function amt_options_page() {
 
     </div>
 
+    <!--
     <div class="wrap amt-settings-notice">
 
         <p>'.__('It is no longer possible to enter the URLs of the Publisher\'s social media profiles in the WordPress user profile page. Instead, this information should be entered in the relevant fields of the <strong>Publisher Settings</strong> section below.', 'add-meta-tags').'</p>
 
     </div>
-
-    <div class="wrap amt-settings-donations-msg" style="' . (($options["i_have_donated"]=="1") ? 'display: none;' : '') . '">
-
-        <h3>'.__('Message from the author', 'add-meta-tags').'</h3>
-
-        <p><em>Add-Meta-Tags</em> is released under the terms of the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License version 2</a> and, therefore, is <strong>Free software</strong>. It is actively maintained and supported free of charge since 2006.</p>
-
-        <p>However, a significant amount of <strong>time</strong> and <strong>energy</strong> has been put into the development of this plugin, so, its production has not been free from cost. If you find this plugin useful and if it has helped your blog get indexed better and rank higher, I would appreciate an <a href="http://bit.ly/HvUakt">extra cup of coffee</a>.</p>
-        <!--
-        <p">Donations in BitCoin (BTC) are also accepted and welcome. Send the donated coin to the following address:</p>
-        <ul>
-            <li style="margin-left: 1em;">BitCoin (BTC): <code>1KkgpmaBKqQVk643VRhFRkL19Bbci4Mwn9</code></li>
-        </ul>
-        -->
-        <p>Thank you in advance,<br />George Notaras</p>
-        <div style="text-align: right;"><small>'.__('This message can be deactivated in the settings below.', 'add-meta-tags').'</small></div>
-    </div>
+    -->
 
     <div class="wrap">
         <h2>'.__('Configuration', 'add-meta-tags').'</h2>
@@ -584,7 +725,7 @@ function amt_options_page() {
                 <textarea name="site_description" id="site_description" cols="100" rows="2" class="code">' . esc_attr( stripslashes( amt_get_site_description($options) ) ) . '</textarea>
                 <br />
                 <label for="site_description">
-                    '.__('Enter a short description of your blog (150-250 characters).', 'add-meta-tags').'
+                    '.__('Enter a short description of your web site.', 'add-meta-tags').'
                 </label>
                 <br />
             </fieldset>
@@ -599,7 +740,7 @@ function amt_options_page() {
                 
                 <textarea name="site_keywords" id="site_keywords" cols="100" rows="2" class="code">' . esc_attr( stripslashes( amt_get_site_keywords($options) ) ) . '</textarea>
                 <br />
-                <label for="site_keywords">'.__('Enter a comma-delimited list of keywords for your blog.', 'add-meta-tags').'</label>
+                <label for="site_keywords">'.__('Enter a comma-delimited list of keywords for your web site.', 'add-meta-tags').'</label>
                 <br />
             </fieldset>
             </td>
@@ -616,7 +757,7 @@ function amt_options_page() {
                 
                 <textarea name="global_keywords" id="global_keywords" cols="100" rows="2" class="code">' . esc_attr( stripslashes( amt_get_site_global_keywords($options) ) ) . '</textarea>
                 <br />
-                <label for="global_keywords">'.__('Enter a comma-delimited list of global keywords.', 'add-meta-tags').'</label>
+                <label for="global_keywords">'.__('Enter a comma-delimited list of global keywords. Please consult the integrated help for more information.', 'add-meta-tags').'</label>
                 <br />
             </fieldset>
             </td>
@@ -712,6 +853,41 @@ function amt_options_page() {
             </tr>
     ');
 
+    // Author Settings
+
+
+    print('
+            <tr valign="top">
+            <th scope="row">'.__('Author Settings', 'add-meta-tags').'</th>
+            <td>
+            <fieldset>
+                <legend class="screen-reader-text"><span>'.__('Author Settings', 'add-meta-tags').'</span></legend>
+
+                <p>'.__('This section contains options related to the authors of the content.', 'add-meta-tags').'</p>
+
+                <h4>'.__('URLs of author profiles on social networks', 'add-meta-tags').':</h4>
+
+                <p>'.__('Each author may fill in the the URLs of the profiles on external social networks in the WordPress user profile page (fields marked with <em>AMT</em>).', 'add-meta-tags').'</p>
+
+                <h4>'.__('Main source of local author profiles', 'add-meta-tags').':</h4>
+
+                <select name="author_profile_source" type="text" id="author_profile_source" class="code">
+                    <option '. (($options["author_profile_source"]=="default") ? 'selected="selected"' : '') .' value="default">'.__('First page of the author archive', 'add-meta-tags').' '.__('(default)', 'add-meta-tags').' &mdash; '.__('Organization web site', 'add-meta-tags').'</option>
+                    <option '. (($options["author_profile_source"]=="frontpage") ? 'selected="selected"' : '') .' value="frontpage">'.__('Front page (with static page only)', 'add-meta-tags').' &mdash; '.__('Personal web site', 'add-meta-tags').'</option>
+                    <option '. (($options["author_profile_source"]=="buddypress") ? 'selected="selected"' : '') .' value="buddypress">'.__('BuddyPress member page', 'add-meta-tags').' &mdash; '.__('Organization web site', 'add-meta-tags').'</option>
+                    <option '. (($options["author_profile_source"]=="url") ? 'selected="selected"' : '') .' value="url">'.__('Author\'s external web site URL', 'add-meta-tags').' &mdash; '.__('Organization web site', 'add-meta-tags').'</option>
+                </select> 
+
+                <br /><br />
+                <p>'.__('This is an advanced option and should not be changed, unless you have consulted the integrated help for more information.', 'add-meta-tags').'</p>
+                <br />
+
+            </fieldset>
+            </td>
+            </tr>
+    ');
+
+
     // Basic Metadata
 
     print('
@@ -741,6 +917,10 @@ function amt_options_page() {
 
                 <input id="auto_opengraph" type="checkbox" value="1" name="auto_opengraph" '. (($options["auto_opengraph"]=="1") ? 'checked="checked"' : '') .'" />
                 <label for="auto_opengraph">'.__('Automatically generate Opengraph meta tags.', 'add-meta-tags').'</label>
+                <br />
+
+                <input id="og_add_xml_namespaces" type="checkbox" value="1" name="og_add_xml_namespaces" '. (($options["og_add_xml_namespaces"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="og_add_xml_namespaces">'.__('Add Facebook\'s XML namespaces.', 'add-meta-tags').'</label>
                 <br />
 
                 <input id="og_omit_video_metadata" type="checkbox" value="1" name="og_omit_video_metadata" '. (($options["og_omit_video_metadata"]=="1") ? 'checked="checked"' : '') .'" />
@@ -783,6 +963,10 @@ function amt_options_page() {
                 <label for="auto_dublincore">'.__('Automatically generate Dublin Core metadata.', 'add-meta-tags').'</label>
                 <br />
 
+                <input id="dc_add_xml_namespaces" type="checkbox" value="1" name="dc_add_xml_namespaces" '. (($options["dc_add_xml_namespaces"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="dc_add_xml_namespaces">'.__('Add the Dublin Core XML namespace.', 'add-meta-tags').'</label>
+                <br />
+
             </fieldset>
             </td>
             </tr>
@@ -798,7 +982,7 @@ function amt_options_page() {
                 <br />
 
                 <input id="schemaorg_force_jsonld" type="checkbox" value="1" name="schemaorg_force_jsonld" '. (($options["schemaorg_force_jsonld"]=="1") ? 'checked="checked"' : '') .'" />
-                <label for="schemaorg_force_jsonld">'.__('Enforce the generation of schema.org metadata as JSON-LD data.', 'add-meta-tags').'</label> (<span style="color:red;">'.__('Experimental feature', 'add-meta-tags').'</span>)
+                <label for="schemaorg_force_jsonld">'.__('Enforce the generation of schema.org metadata as JSON-LD data.', 'add-meta-tags').'</label>
                 <br />
 
             </fieldset>
@@ -815,6 +999,7 @@ function amt_options_page() {
                 <br />
                 <label for="global_locale">
                 '.__('Enter a locale, for example <code>en_US</code> or <code>zh_Hans_TW</code>, which will be used globally in the generated metadata overriding the default locale as returned by WordPress.', 'add-meta-tags').'
+                '.__('The locale can be overridden on a per post basis. For this purpose, enabling the relevant metabox feature below is required.', 'add-meta-tags').'
                 </label>
                 <br />
 
@@ -887,7 +1072,44 @@ function amt_options_page() {
                 '.__('Referenced items.', 'add-meta-tags').' ('.__('Not recommended', 'add-meta-tags').')
                 </label></p>
 
+            ');
+
+            // The term meta API was implemented in 4.4
+            if ( version_compare( get_bloginfo('version'), '4.4', '>=' ) ) {
+            
+                print('
+                    <h4>'.__('Taxonomy terms', 'add-meta-tags').':</h4>
+
+                    <p><input id="metabox_term_enable_full_metatags" type="checkbox" value="1" name="metabox_term_enable_full_metatags" '. (($options["metabox_term_enable_full_metatags"]=="1") ? 'checked="checked"' : '') .'" />
+                    <label for="metabox_term_enable_full_metatags">
+                    '.__('Full meta tags box.', 'add-meta-tags').'
+                    </label></p>
+
+                    <p><input id="metabox_term_enable_image_url" type="checkbox" value="1" name="metabox_term_enable_image_url" '. (($options["metabox_term_enable_image_url"]=="1") ? 'checked="checked"' : '') .'" />
+                    <label for="metabox_term_enable_image_url">
+                    '.__('Global image override.', 'add-meta-tags').'
+                    </label></p>
+
+                ');
+
+            }
+
+            print('
+
+                <h4>'.__('WordPress user profiles', 'add-meta-tags').':</h4>
+
+                <p><input id="metabox_user_enable_full_metatags" type="checkbox" value="1" name="metabox_user_enable_full_metatags" '. (($options["metabox_user_enable_full_metatags"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="metabox_user_enable_full_metatags">
+                '.__('Full meta tags box.', 'add-meta-tags').'
+                </label></p>
+
+                <p><input id="metabox_user_enable_image_url" type="checkbox" value="1" name="metabox_user_enable_image_url" '. (($options["metabox_user_enable_image_url"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="metabox_user_enable_image_url">
+                '.__('Global image override.', 'add-meta-tags').'
+                </label></p>
+
                 <br />
+
             </fieldset>
             </td>
             </tr>
@@ -946,9 +1168,8 @@ function amt_options_page() {
 
                 <p><input id="enable_advanced_title_management" type="checkbox" value="1" name="enable_advanced_title_management" '. (($options["enable_advanced_title_management"]=="1") ? 'checked="checked"' : '') .'" />
                 <label for="enable_advanced_title_management">
-                '.__('Enable advanced SEO title management.', 'add-meta-tags').'
+                '.__('Enable advanced title management.', 'add-meta-tags').'
                 (<a target="_blank" href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Advanced_Title_Management">'.__('Learn more', 'add-meta-tags').'</a>)
-                (<span style="color:red;">'.__('Experimental feature', 'add-meta-tags').'</span>)
                 </label>
 
                 <br />
@@ -962,7 +1183,7 @@ function amt_options_page() {
             <fieldset>
                 <legend class="screen-reader-text"><span>'.__('Copyright URL', 'add-meta-tags').'</span></legend>
 
-                <input name="copyright_url" type="text" id="copyright_url" class="code" value="' . esc_url_raw( stripslashes( amt_get_site_copyright_url($options) ) ) . '" size="100" maxlength="1024" />
+                <input name="copyright_url" type="text" id="copyright_url" class="code" value="' . esc_url( stripslashes( amt_get_site_copyright_url($options) ) ) . '" size="100" maxlength="1024" />
                 <br />
                 <label for="copyright_url">
                 '.__('Enter an absolute URL to a document containing copyright and licensing information about your work.', 'add-meta-tags').'
@@ -978,12 +1199,51 @@ function amt_options_page() {
             <fieldset>
                 <legend class="screen-reader-text"><span>'.__('Default Image', 'add-meta-tags').'</span></legend>
 
-                <input name="default_image_url" type="text" id="default_image_url" class="code" value="' . esc_url_raw( stripslashes( $options["default_image_url"] ) ) . '" size="100" maxlength="1024" />
+                <input name="default_image_url" type="text" id="default_image_url" class="code" value="' . amt_esc_id_or_url_notation( stripslashes( $options["default_image_url"] ) ) . '" size="100" maxlength="1024" />
                 <br />
+
+                <span id="amt-default-image-selector-button" class="amt-default-image-selector-button wp-media-buttons-icon loadmediawindow button updatemeta button-small">Select image</span>
+                <br />
+
                 <label for="default_image_url">
-                '.__('Enter an absolute URL to an image that represents your website, for instance the logo.', 'add-meta-tags').'
+                '.__('Enter an absolute URL to an image that represents your website, for instance the logo. To specify the image dimensions you can use the special notation <code>URL,WIDTHxHEIGHT</code>.', 'add-meta-tags').'
                 </label>
                 <br />
+        ');
+
+            // Default image preview
+            $image_data = amt_get_default_image_data();
+            $img_html = '';
+            if ( is_numeric($image_data['id']) ) {
+                $main_size_meta = wp_get_attachment_image_src( $image_data['id'], 'medium' );
+                $img_html = '<img src="' . esc_url($main_size_meta[0]) . '" width="' . esc_attr($main_size_meta[1]) . '" height="' . esc_attr($main_size_meta[2]) . '" />';
+            } elseif ( ! is_null($image_data['url']) ) {
+                $img_html = '<img src="' . esc_url($image_data['url']) . '" width="' . esc_attr($image_data['width']) . '" height="' . esc_attr($image_data['height']) . '" />';
+            }
+            if ( ! empty($img_html) ) {
+                print('
+                <p>'.__('Image preview', 'add-meta-tags').':</p>
+                <br />
+                <div id="amt-image-preview" class="amt-image-preview">' . $img_html . '</div>
+                ');
+            }
+
+        print('
+            </fieldset>
+            </td>
+            </tr>
+
+
+            <tr valign="top">
+            <th scope="row">'.__('Shortcodes', 'add-meta-tags').'</th>
+            <td>
+            <fieldset>
+                <legend class="screen-reader-text"><span>'.__('Shortcodes', 'add-meta-tags').'</span></legend>
+
+                <input id="expand_shortcodes" type="checkbox" value="1" name="expand_shortcodes" '. (($options["expand_shortcodes"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="expand_shortcodes">'.__('Enforce the expansion of shortcodes before generating a description.', 'add-meta-tags').'</label>
+                <br />
+
             </fieldset>
             </td>
             </tr>
@@ -1015,12 +1275,38 @@ function amt_options_page() {
             </tr>
 
             <tr valign="top">
+            <th scope="row">'.__('Review Mode', 'add-meta-tags').'</th>
+            <td>
+            <fieldset>
+                <legend class="screen-reader-text"><span>'.__('Review Mode', 'add-meta-tags').'</span></legend>
+
+                <input id="review_mode" type="checkbox" value="1" name="review_mode" '. (($options["review_mode"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="review_mode">'.__('Enable <em>Metadata Review Mode</em>.', 'add-meta-tags').'</label>
+                <br />
+
+                <input id="review_mode_metadata_report" type="checkbox" value="1" name="review_mode_metadata_report" '. (($options["review_mode_metadata_report"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="review_mode_metadata_report">'.__('Enable keyword analysis and statistics.', 'add-meta-tags').'</label>
+                (<a target="_blank" href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Metadata_Overview">'.__('Learn more', 'add-meta-tags').'</a>)
+                (<span style="color:red;">'.__('Experimental', 'add-meta-tags').'</span>)
+                <br />
+
+                <input id="review_mode_omit_notices" type="checkbox" value="1" name="review_mode_omit_notices" '. (($options["review_mode_omit_notices"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="review_mode_omit_notices">'.__('Omit help messages and notices. I have read, understood and agreed to them.', 'add-meta-tags').'</label>
+                <br />
+
+            </fieldset>
+            </td>
+            </tr>
+
+            <tr valign="top">
             <th scope="row">'.__('Extended Metadata Support', 'add-meta-tags').'</th>
             <td>
             <fieldset>
                 <legend class="screen-reader-text"><span>'.__('Extended Metadata Support', 'add-meta-tags').'</span></legend>
 
                 <p>'.__('Add-Meta-Tags supports the generation of metadata for products and other post types. Please enable any of the following generators of extended metadata.', 'add-meta-tags').'</p>
+
+                <br />
 
                 <p><input id="extended_support_woocommerce" type="checkbox" value="1" name="extended_support_woocommerce" '. (($options["extended_support_woocommerce"]=="1") ? 'checked="checked"' : '') .'" />
                 <label for="extended_support_woocommerce">
@@ -1032,36 +1318,109 @@ function amt_options_page() {
                 '.__('Metadata for Easy-Digital-Downloads products and product groups.', 'add-meta-tags').' (<span style="color:red;">'.__('Work in progress', 'add-meta-tags').'</span>)
                 </label></p>
 
+                <p><input id="extended_support_buddypress" type="checkbox" value="1" name="extended_support_buddypress" '. (($options["extended_support_buddypress"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="extended_support_buddypress">
+                '.__('Metadata for BuddyPress profiles.', 'add-meta-tags').'
+                </label></p>
+
+                <p><input id="extended_support_bbpress" type="checkbox" value="1" name="extended_support_bbpress" '. (($options["extended_support_bbpress"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="extended_support_bbpress">
+                '.__('Metadata for bbPress.', 'add-meta-tags').' (<span style="color:red;">'.__('Work in progress', 'add-meta-tags').'</span>)
+                </label></p>
+
                 <br />
+
+                <p>'.__('Please consult the integrated help for more information about these features.', 'add-meta-tags').'</p>
+
+                <br />
+
             </fieldset>
             </td>
             </tr>
+    ');
 
+
+    // Metadata Caching
+
+    if ( apply_filters('amt_enable_metadata_cache', true) ) {
+        print('
             <tr valign="top">
-            <th scope="row">'.__('Review Mode', 'add-meta-tags').'</th>
+            <th scope="row">'.__('Metadata Caching', 'add-meta-tags').'</th>
             <td>
             <fieldset>
-                <legend class="screen-reader-text"><span>'.__('Review Mode', 'add-meta-tags').'</span></legend>
+                <legend class="screen-reader-text"><span>'.__('Metadata Caching', 'add-meta-tags').'</span></legend>
 
-                <input id="review_mode" type="checkbox" value="1" name="review_mode" '. (($options["review_mode"]=="1") ? 'checked="checked"' : '') .'" />
-                <label for="review_mode">'.__('Enable <em>Metadata Review Mode</em>.', 'add-meta-tags').'</label>
+                <input id="enable_timings" type="checkbox" value="1" name="enable_timings" '. (($options["enable_timings"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="enable_timings">'.__('Show timing information.', 'add-meta-tags').'</label>
+                <br /><br />
+
+                <label for="transient_cache_expiration">'.__('Cache metadata for this number of seconds:', 'add-meta-tags').'</label>
+                <input id="transient_cache_expiration" type="text" name="transient_cache_expiration" value="' . esc_attr( $options["transient_cache_expiration"] ) . '" size="10" maxlength="16" class="code" />
+                <br /><br />
+
+                <p>'.__('Metadata caching is an advanced feature and should only be used after you have read and fully understood the <em>Metadata caching</em> section of the integrated help.', 'add-meta-tags').'</p>
                 <br />
+        ');
+
+        // Metadata cache status
+
+        if ( absint($options["transient_cache_expiration"]) > 0 ) {
+            // Get the number of cached entries
+            // This only works when the database is used as the Transient Data storage backend.
+            // If external storage backends are used for the transient data, this is always going to be zeo.
+            $nr_cached_blocks = amt_count_transient_metadata_cache_entries();
+            if ( absint($nr_cached_blocks) > 0 ) {
+                print('
+                    <p>'.__('<strong>Metadata cache status</strong>: <em>Activated</em>, <strong style="color: green;">' . esc_attr( $nr_cached_blocks ) . '</strong> metadata blocks have been cached. All cached metadata blocks will be automatically purged the next time these settings are saved.', 'add-meta-tags').'</p>
+                    <br />
+                ');
+            } else {
+                print('
+                    <p>'.__('<strong>Metadata cache status</strong>: <em>Activated</em>, but no cached metadata blocks have been detected. This means that either no metadata blocks have been cached yet in the database or your WordPress installation uses an external storage backend for the transient data.', 'add-meta-tags').'</p>
+                    <br />
+                ');
+            }
+        } else {
+            print('
+                <p>'.__('<strong>Metadata cache status</strong>: <em>Deactivated</em>. The caching timeout is set to zero, so metadata blocks are not cached.', 'add-meta-tags').'</p>
+                <br />
+            ');
+        }
+
+        print('
             </fieldset>
             </td>
             </tr>
+        ');
+    }
 
+    print('
             <tr valign="top">
-            <th scope="row">'.__('Donations', 'add-meta-tags').'</th>
+            <th scope="row">'.__('Vendor HTML comments', 'add-meta-tags').'</th>
             <td>
             <fieldset>
-                <legend class="screen-reader-text"><span>'.__('Donations', 'add-meta-tags').'</span></legend>
+                <legend class="screen-reader-text"><span>'.__('Vendor HTML comments', 'add-meta-tags').'</span></legend>
 
-                <input id="i_have_donated" type="checkbox" value="1" name="i_have_donated" '. (($options["i_have_donated"]=="1") ? 'checked="checked"' : '') .'" />
-                <label for="i_have_donated">'.sprintf( __('If checked, the <em>message from the author</em> above goes away. Thanks for <a href="%s">donating</a>!', 'add-meta-tags'), 'http://bit.ly/HvUakt').'</label>
+                <p>
+                    '.__('Add-Meta-Tags has always been enclosing its output in <a target="_blank" href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Screenshots#Vendor-HTML-comments">HTML comments</a>, which contain the plugin\'s name. This is common practice among WordPress plugin developers as it makes it easier for users to identify the output of a specific plugin and also lets those who check the HTML source code of the page know which plugin has generated this specific output. By checking the following option you can remove those comments.', 'add-meta-tags').'
+                </p>
                 <br />
+
+                <input id="omit_vendor_html_comments" type="checkbox" value="1" name="omit_vendor_html_comments" '. (($options["omit_vendor_html_comments"]=="1") ? 'checked="checked"' : '') .'" />
+                <label for="omit_vendor_html_comments">'.sprintf( __('Omit the vendor HTML comments.', 'add-meta-tags'), 'http://bit.ly/HvUakt').'</label> *
+                <br />
+
+                <p>
+                    '.__('<em>* HTML comments that are generated as part of the Schema.org microdata are always retained.</em>', 'add-meta-tags').'
+                </p>
+                <br />
+
             </fieldset>
             </td>
             </tr>
+    ');
+
+    print('
 
         </tbody>
         </table>
@@ -1073,13 +1432,24 @@ function amt_options_page() {
                 <th scope="row">
                     <input id="submit" class="button-primary" type="submit" value="'.__('Save Changes', 'add-meta-tags').'" name="info_update" />
                 </th>
+
+<!--
                 <th scope="row">
                     <input id="reset" class="button-primary" type="submit" value="'.__('Reset to defaults', 'add-meta-tags').'" name="info_reset" />
                 </th>
+-->
+
                 <th></th><th></th><th></th><th></th>
             </tr>
         </tbody>
         </table>
+
+        <br /><br /><br />
+
+        <h2 class="title">'.__('Notes', 'add-meta-tags').'</h2>
+
+        <p>'.__('More management tools are available via the <code>amt</code> command of <code>wp-cli</code>. Learn more about the <a target="_blank" href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Command_Line_Interface">Add-Meta-Tags command line interface</a>.', 'add-meta-tags').'</p>
+
 
         </form>
         
@@ -1087,13 +1457,56 @@ function amt_options_page() {
 
     ');
 
+    print('
+    </span> <!-- #add-meta-tags-settings -->
+    ');
+
 }
 
 
 
-/**
- * Meta box in post/page editing panel.
- */
+//
+//
+// Metadata metabox in post/page editing panel.
+//
+//
+
+function amt_post_edit_metabox_enqueue_scripts($hook) {
+    // Enqueue only on profile page.
+    if ( ! in_array($hook, array('post.php', 'post-new.php')) ) {
+        return;
+    }
+    
+    // $supported_types = amt_get_post_types_for_metabox();
+    // See: #900 for details
+
+    // Using included Jquery
+    wp_enqueue_script('jquery');
+
+// For tabs
+//    wp_enqueue_script('jquery-ui-core');
+//    wp_enqueue_script('jquery-ui-widget');
+//    wp_enqueue_script('jquery-ui-tabs');
+
+    // Necessary for the media selector.
+    // https://codex.wordpress.org/Javascript_Reference/wp.media
+    wp_enqueue_media();
+
+// For tabs
+    //wp_register_style( 'amt-jquery-ui-core', plugins_url('css/jquery.ui.core.css', AMT_PLUGIN_FILE) );
+    //wp_enqueue_style( 'amt-jquery-ui-core' );
+    //wp_register_style( 'amt-jquery-ui-tabs', plugins_url('css/jquery.ui.tabs.css', AMT_PLUGIN_FILE) );
+    //wp_enqueue_style( 'amt-jquery-ui-tabs' );
+//    wp_register_style( 'amt-metabox-tabs', plugins_url('css/amt-metabox-tabs.css', AMT_PLUGIN_FILE) );
+//    wp_enqueue_style( 'amt-metabox-tabs' );
+
+    // Register Add-Meta-Tags admin scripts
+    wp_register_script( 'amt_image_selector_script', plugins_url( 'js/amt-image-selector.js', AMT_PLUGIN_FILE ), array('jquery') );
+    // Enqueue the Add-Meta-Tags Admin Scripts
+    wp_enqueue_script( 'amt_image_selector_script' );
+}
+add_action( 'admin_enqueue_scripts', 'amt_post_edit_metabox_enqueue_scripts' );
+
 
 /* Define the custom box */
 add_action( 'add_meta_boxes', 'amt_add_metadata_box' );
@@ -1124,7 +1537,7 @@ function amt_add_metadata_box() {
     foreach ($supported_types as $supported_type) {
         add_meta_box( 
             'amt-metadata-box',
-            __( 'Metadata', 'add-meta-tags' ),
+            __( 'Metadata', 'add-meta-tags' ) . ' ' . __('(by <em>Add-Meta-Tags</em>)', 'add-meta-tags'),
             'amt_inner_metadata_box',
             $supported_type,
             'advanced',
@@ -1135,35 +1548,8 @@ function amt_add_metadata_box() {
 }
 
 
-/**
- * Load CSS and JS for metadata box.
- * The editing pages are post.php and post-new.php
- */
-// add_action('admin_print_styles-post.php', 'amt_metadata_box_css_js');
-// add_action('admin_print_styles-post-new.php', 'amt_metadata_box_css_js');
-
-function amt_metadata_box_css_js () {
-    // $supported_types = amt_get_post_types_for_metabox();
-    // See: #900 for details
-
-    // Using included Jquery UI
-    wp_enqueue_script('jquery');
-    wp_enqueue_script('jquery-ui-core');
-    wp_enqueue_script('jquery-ui-widget');
-    wp_enqueue_script('jquery-ui-tabs');
-
-    //wp_register_style( 'amt-jquery-ui-core', plugins_url('css/jquery.ui.core.css', AMT_PLUGIN_FILE) );
-    //wp_enqueue_style( 'amt-jquery-ui-core' );
-    //wp_register_style( 'amt-jquery-ui-tabs', plugins_url('css/jquery.ui.tabs.css', AMT_PLUGIN_FILE) );
-    //wp_enqueue_style( 'amt-jquery-ui-tabs' );
-    wp_register_style( 'amt-metabox-tabs', plugins_url('css/amt-metabox-tabs.css', AMT_PLUGIN_FILE) );
-    wp_enqueue_style( 'amt-metabox-tabs' );
-
-}
-
-
-/* For future reference - Add data to the HEAD area of post editing panel */
-
+// For future reference - Add data to the HEAD area of post editing panel
+//
 // add_action('admin_head-post.php', 'amt_metabox_script_caller');
 // add_action('admin_head-post-new.php', 'amt_metabox_script_caller');
 // OR
@@ -1226,6 +1612,11 @@ function amt_inner_metadata_box( $post ) {
 
     $metabox_has_features = false;
 
+    print('
+    <!-- #add-meta-tags-settings is required by the media selector -->
+    <span id="add-meta-tags-settings">
+    ');
+
     // Custom description
     
     // Description box permission check (can be user customized via filter).
@@ -1264,6 +1655,14 @@ function amt_inner_metadata_box( $post ) {
             ');
         }
 
+        // Add warning about the automatic descriptions being turned off.
+        if ( ! apply_filters( 'amt_generate_description_if_no_manual_data', true ) ) {
+            print('
+                <p>
+                    <em>'.__('Warning: the automatic generation of descriptions has been turned off.', 'add-meta-tags').'</em>
+                </p>
+            ');
+        }
     }
 
 
@@ -1304,6 +1703,15 @@ function amt_inner_metadata_box( $post ) {
             print('
                 <p>
                     '.__('If the <em>keywords</em> field is left blank, a <em>keywords</em> meta tag will only be automatically generated from global keywords, if any such global keywords have been set in the plugin settings.', 'add-meta-tags').'
+                </p>
+            ');
+        }
+
+        // Add warning about the automatic keywords being turned off.
+        if ( ! apply_filters( 'amt_generate_keywords_if_no_manual_data', true ) ) {
+            print('
+                <p>
+                    <em>'.__('Warning: the automatic generation of keywords has been turned off.', 'add-meta-tags').'</em>
                 </p>
             ');
         }
@@ -1370,20 +1778,17 @@ function amt_inner_metadata_box( $post ) {
         print('
             <p>
                 <label for="amt_custom_full_metatags"><strong>'.__('Full meta tags', 'add-meta-tags').'</strong>:</label>
-                ' . amt_get_full_meta_tag_sets() . '
+                ' . amt_get_full_meta_tag_sets( $custom_full_metatags_value ) . '
                 <textarea class="code" style="width: 99%" id="amt_custom_full_metatags" name="amt_custom_full_metatags" cols="30" rows="6" >'. stripslashes( $custom_full_metatags_value ) .'</textarea>
-                <br>
-                '.__('Provide the full XHTML code of extra META elements you would like to add to this content (read more about the <a href="http://en.wikipedia.org/wiki/Meta_element" target="_blank">META HTML element</a> on Wikipedia).', 'add-meta-tags').'
-                '.__('Find out how to create <a href="http://www.codetrax.org/projects/wp-add-meta-tags/wiki/Plugin_Functionality_Customization#Create-Pre-Defined-Full-Meta-Tag-Sets">pre-defined sets</a> of the meta tags you use often.', 'add-meta-tags').'
-            </p>
-            <p>
+                <br />
+                '.__('Provide the full XHTML code of extra <a target="_blank" href="http://en.wikipedia.org/wiki/Meta_element" target="_blank"><code>meta</code></a> and <code>link</code> <a target="_blank" href="https://en.wikipedia.org/wiki/HTML_element">HTML elements</a> you would like to add to this content.', 'add-meta-tags').'
                 '.__('For example, to prevent a cached copy of this content from being available in search engine results, you can add the following metatag:', 'add-meta-tags').'
-                <br /><code>&lt;meta name="robots" content="noarchive" /&gt;</code>
+                <br /><br />
+                <code>&lt;meta name="robots" content="noarchive" /&gt;</code>
             </p>
 
-            <p>
-                '.__('Important note: for security reasons only <code>meta</code> elements are allowed in this box. All other HTML elements are automatically removed.', 'add-meta-tags').'
-            </p>
+            <p>'.__('Moreover, the full meta tags box accepts the special notation <code>[field=Field Name]</code> which lets you use data from a Custom Field with name <em>Field Name</em>. This special notation may exist anywhere inside the meta tag. To automatically add paging information to URLs, append the <code>PAGEINFO</code> placeholder.', 'add-meta-tags').'</p>
+
         ');
 
     }
@@ -1401,11 +1806,34 @@ function amt_inner_metadata_box( $post ) {
         print('
             <p>
                 <label for="amt_custom_image_url"><strong>'.__('Image URL', 'add-meta-tags').'</strong>:</label>
-                <input type="text" class="code" style="width: 99%" id="amt_custom_image_url" name="amt_custom_image_url" value="' . esc_url_raw( stripslashes( $custom_image_url_value ) ) . '" />
-                <br>
-                '.__('Enter an image URL to override all media related meta tags.', 'add-meta-tags').'
+                <input type="text" class="code" style="width: 99%" id="amt_custom_image_url" name="amt_custom_image_url" value="' . amt_esc_id_or_url_notation( stripslashes( $custom_image_url_value ) ) . '" />
+
+                <span id="amt-image-selector-button" class="amt-image-selector-button wp-media-buttons-icon loadmediawindow button updatemeta button-small">'.__('Select image', 'add-meta-tags').'</span>
+                <br />
+
+                '.__('Enter an absolute image URL in order to enforce the use of this image in the metadata. To specify the image dimensions you can use the special notation <code>URL,WIDTHxHEIGHT</code>.', 'add-meta-tags').'
+                '.__('Alternatively, you can select an image by pressing the <em>Select image</em> button.', 'add-meta-tags').'
+                '.__('If this image is set, the plugin will not generate metadata for other media.', 'add-meta-tags').'
             </p>
+
         ');
+
+            // Image preview
+            $image_data = amt_get_image_data( amt_esc_id_or_url_notation( stripslashes( $custom_image_url_value ) ) );
+            $img_html = '';
+            if ( is_numeric($image_data['id']) ) {
+                $main_size_meta = wp_get_attachment_image_src( $image_data['id'], 'medium' );
+                $img_html = '<img src="' . esc_url($main_size_meta[0]) . '" width="' . esc_attr($main_size_meta[1]) . '" height="' . esc_attr($main_size_meta[2]) . '" />';
+            } elseif ( ! is_null($image_data['url']) ) {
+                $img_html = '<img src="' . esc_url($image_data['url']) . '" width="' . esc_attr($image_data['width']) . '" height="' . esc_attr($image_data['height']) . '" />';
+            }
+            if ( ! empty($img_html) ) {
+                print('
+                <p>'.__('Image preview', 'add-meta-tags').':</p>
+                <br />
+                <div id="amt-image-preview" class="amt-image-preview">' . $img_html . '</div>
+                ');
+            }
 
     }
 
@@ -1514,6 +1942,10 @@ sameAs = http://en.wikipedia.org/wiki/On_the_Origin_of_Species\n\
         ');
     }
 
+    print('
+    </span> <!-- #add-meta-tags-settings -->
+    ');
+
 }
 
 
@@ -1583,7 +2015,7 @@ function amt_save_postdata( $post_id, $post ) {
     }
     // Image URL
     if ( isset( $_POST['amt_custom_image_url'] ) ) {
-        $image_url_value = esc_url_raw( stripslashes( $_POST['amt_custom_image_url'] ) );
+        $image_url_value = amt_esc_id_or_url_notation( stripslashes( $_POST['amt_custom_image_url'] ) );
     }
     // Content locale
     if ( isset( $_POST['amt_custom_content_locale'] ) ) {
@@ -1592,6 +2024,10 @@ function amt_save_postdata( $post_id, $post ) {
     // Express review
     if ( isset( $_POST['amt_custom_express_review'] ) ) {
         $express_review_value = esc_textarea( wp_kses( stripslashes( $_POST['amt_custom_express_review'] ), array() ) );
+        //
+        // REVIEW_AMPERSAND_NOTE: We replace &amp; to & for (see also REVIEW_AMPERSAND_NOTE in amt-utils.php)
+        //
+        $express_review_value = str_replace('&amp;', '&', $express_review_value);
     }
     // List of referenced items - We allow no HTML elements.
     if ( isset( $_POST['amt_custom_referenced_list'] ) ) {
@@ -1705,5 +2141,496 @@ function amt_save_postdata( $post_id, $post ) {
     }
     
 }
+
+
+
+//
+//
+// Extra fields to taxonomy terms
+//
+//
+
+
+function amt_terms_enqueue_scripts($hook) {
+    // Enqueue only on profile page.
+    if ( 'term.php' != $hook ) {
+        return;
+    }
+    
+    // Using included Jquery UI
+    wp_enqueue_script('jquery');
+
+    // Necessary for the media selector.
+    // https://codex.wordpress.org/Javascript_Reference/wp.media
+    wp_enqueue_media();
+
+    // Register Add-Meta-Tags admin scripts
+    wp_register_script( 'amt_image_selector_script', plugins_url( 'js/amt-image-selector.js', AMT_PLUGIN_FILE ), array('jquery') );
+    // Enqueue the Add-Meta-Tags Admin Scripts
+    wp_enqueue_script( 'amt_image_selector_script' );
+}
+add_action( 'admin_enqueue_scripts', 'amt_terms_enqueue_scripts' );
+
+
+function amt_add_extra_section_fields_terms() {
+
+    // The term meta API was implemented in 4.4
+    if ( version_compare( get_bloginfo('version'), '4.4', '<' ) ) {
+        return;
+    }
+
+    $taxonomies = get_taxonomies();
+    if ( ! empty($taxonomies) ) {
+        foreach ( $taxonomies as $key => $taxonomy_slug ) {
+            // For new term additions.
+            //add_action( $taxonomy_slug . '_add_form_fields', 'amt_taxonomy_extra_fields_show', 9999, 2 );
+            // For editing current terms.
+            add_action( $taxonomy_slug . '_edit_form_fields', 'amt_taxonomy_extra_fields_show', 9999, 2 );
+
+            // Store data when created
+            //add_action( 'created_' . $taxonomy_slug, 'amt_taxonomy_extra_fields_save', 10, 2 );
+            // Store data when edited
+            add_action( 'edited_' . $taxonomy_slug, 'amt_taxonomy_extra_fields_save', 10, 2 );
+        }
+    }
+}
+add_action('admin_init', 'amt_add_extra_section_fields_terms');
+
+
+function amt_taxonomy_extra_fields_show( $term, $taxonomy_slug ) {
+
+    // Use a nonce field for verification
+    wp_nonce_field( plugin_basename( AMT_PLUGIN_FILE ), 'amt_noncename' );
+
+    // Get the Metadata metabox permissions (filtered)
+    $metabox_permissions = amt_get_metadata_metabox_permissions();
+
+    // Get the Add-Meta-Tags options.
+    $options = amt_get_options();
+
+    // Store term ID
+    $term_id = $term->term_id;
+
+    // Display the meta box HTML code.
+
+    $metabox_has_features = false;
+
+    print('
+        <tr class="form-field">
+        <th scope="row"><h3>'.__('Add-Meta-Tags', 'add-meta-tags').'</h3></th>
+        <td></td>
+        </tr>
+    ');
+
+    // per post full meta tags
+    
+    // Full meta tags box permission check (can be user customized via filter).
+    if ( $options['metabox_term_enable_full_metatags'] == '1' && current_user_can( $metabox_permissions['term_full_metatags_box_capability'] ) ) {
+        $metabox_has_features = true;
+
+        // Retrieve the field data from the database.
+        $custom_full_metatags_value = amt_get_term_meta_full_metatags( $term_id );
+
+        print('
+            <!-- .add-meta-tags-setting is required by the media selector -->
+            <tr class="add-meta-tags-setting form-field term-amt_custom_full_metatags-wrap">
+            <th scope="row"><label for="amt_custom_full_metatags">'.__('Full meta tags', 'add-meta-tags').'</label></th>
+            <td>
+                <textarea class="large-text code" style="width: 99%" id="amt_custom_full_metatags" name="amt_custom_full_metatags" cols="50" rows="6" >'. stripslashes( $custom_full_metatags_value ) .'</textarea>
+                <p class="description">
+                    '.__('Provide the full XHTML code of extra <a target="_blank" href="http://en.wikipedia.org/wiki/Meta_element" target="_blank"><code>meta</code></a> and <code>link</code> <a target="_blank" href="https://en.wikipedia.org/wiki/HTML_element">HTML elements</a>. To automatically add paging information to URLs, append the <code>PAGEINFO</code> placeholder. For example:', 'add-meta-tags').'
+                    <br /><br />
+                    <code>&lt;meta name="robots" content="noodp,noarchive,notranslate,noimageindex" /&gt;</code>
+                    <br />
+                    <code>&lt;link rel="prefetch" href="http://www.example.org/landing-page.html" /&gt;</code>
+                    <br />
+                    <code>&lt;link rel="alternate" hreflang="el" href="http://example.org/section/multimedia/PAGEINFO" /&gt;</code>
+                    <br />
+                </p>
+            </td>
+            </tr>
+
+        ');
+
+    }
+
+
+    // Image URL (global override)
+    
+    // 'image_url' box permission check (can be user customized via filter).
+    if ( $options['metabox_term_enable_image_url'] == '1' && current_user_can( $metabox_permissions['term_image_url_box_capability'] ) ) {
+        $metabox_has_features = true;
+
+        // Retrieve the field data from the database.
+        $custom_image_url_value = amt_get_term_meta_image_url( $term_id );
+
+        print('
+            <!-- .add-meta-tags-setting is required by the media selector -->
+            <tr class="add-meta-tags-setting form-field term-amt_custom_image_url-wrap">
+            <th scope="row"><label for="amt_custom_image_url">'.__('Image URL', 'add-meta-tags').'</label></th>
+            <td>
+            <input type="text" class="code" style="width: 99%" size="40" id="amt_custom_image_url" name="amt_custom_image_url" value="' . amt_esc_id_or_url_notation( stripslashes( $custom_image_url_value ) ) . '" />
+
+            <span id="amt-image-selector-button" class="amt-image-selector-button wp-media-buttons-icon loadmediawindow button updatemeta button-small">'.__('Select image', 'add-meta-tags').'</span>
+            <br />
+
+            <p class="description">
+                '.__('Enter an absolute image URL in order to enforce the use of this image in the metadata. To specify the image dimensions you can use the special notation <code>URL,WIDTHxHEIGHT</code>.', 'add-meta-tags').'
+                '.__('Alternatively, you can select an image by pressing the <em>Select image</em> button.', 'add-meta-tags').'
+                <br />
+            </p>
+
+        ');
+
+            // Image preview
+            $image_data = amt_get_image_data( amt_esc_id_or_url_notation( stripslashes( $custom_image_url_value ) ) );
+            $img_html = '';
+            if ( is_numeric($image_data['id']) ) {
+                $main_size_meta = wp_get_attachment_image_src( $image_data['id'], 'medium' );
+                $img_html = '<img src="' . esc_url($main_size_meta[0]) . '" width="' . esc_attr($main_size_meta[1]) . '" height="' . esc_attr($main_size_meta[2]) . '" />';
+            } elseif ( ! is_null($image_data['url']) ) {
+                $img_html = '<img src="' . esc_url($image_data['url']) . '" width="' . esc_attr($image_data['width']) . '" height="' . esc_attr($image_data['height']) . '" />';
+            }
+            if ( ! empty($img_html) ) {
+                print('
+                <p>'.__('Image preview', 'add-meta-tags').':</p>
+                <br />
+                <div id="amt-image-preview" class="amt-image-preview">' . $img_html . '</div>
+                ');
+            }
+
+        print('
+
+            </td>
+            </tr>
+
+        ');
+
+    }
+
+    // If no features have been enabled, print an informative message
+    if ( $metabox_has_features === false ) {
+        print('
+
+        <tr class="form-field">
+        <th scope="row">'.__('Notice', 'add-meta-tags').'</th>
+        <td>
+            <p>'.__(sprintf( 'No features have been enabled for this metabox in the Add-Meta-Tags <a href="%s">settings</a> or you do not have enough permissions to access the available features.', admin_url( 'options-general.php?page=add-meta-tags-options' ) ), 'add-meta-tags').'</p>
+        </td>
+        </tr>
+        ');
+    }
+
+}
+
+
+// When the term is saved
+function amt_taxonomy_extra_fields_save( $term_id, $taxonomy_id ) {
+
+    /* Verify the nonce before proceeding. */
+    // Verify this came from the our screen and with proper authorization,
+    // because save_post can be triggered at other times
+    if ( ! isset($_POST['amt_noncename']) || ! wp_verify_nonce( $_POST['amt_noncename'], plugin_basename( AMT_PLUGIN_FILE ) ) )
+        return;
+
+    // Get the Metadata metabox permissions (filtered)
+    $metabox_permissions = amt_get_metadata_metabox_permissions();
+
+    // Global Metadata metabox permission check (can be user customized via filter).
+    if ( ! current_user_can( $metabox_permissions['global_metabox_capability'] ) ) {
+        return;
+    }
+
+    // Get the Add-Meta-Tags options.
+    $options = amt_get_options();
+
+    // Check if the current user has permission to edit the post.
+	if ( ! current_user_can( 'edit_published_posts' ) ) {
+		return;
+    }
+
+    // OK, we're authenticated: we need to find and save the data
+
+    //
+    // Sanitize user input
+    //
+
+    // Full metatags - We allow only <meta> elements.
+    if ( isset( $_POST['amt_custom_full_metatags'] ) ) {
+        $full_metatags_value = esc_textarea( wp_kses( stripslashes( $_POST['amt_custom_full_metatags'] ), amt_get_allowed_html_kses() ) );
+    }
+    // Image URL
+    if ( isset( $_POST['amt_custom_image_url'] ) ) {
+        $image_url_value = amt_esc_id_or_url_notation( stripslashes( $_POST['amt_custom_image_url'] ) );
+    }
+
+    // If a value has not been entered we try to delete existing data from the database
+    // If the user has entered data, store it in the database.
+
+    // Add-Meta-Tags custom field names
+    $amt_full_metatags_field_name = '_amt_term_full_metatags';
+    $amt_image_url_field_name = '_amt_term_image_url';
+
+    // As an extra security measure, here we also check the user-defined per box
+    // permissions before we save any data in the database.
+
+    // per term full meta tags
+    if ( $options['metabox_term_enable_full_metatags'] == '1' && current_user_can( $metabox_permissions['term_full_metatags_box_capability'] ) ) {
+        if ( empty($full_metatags_value) ) {
+            delete_term_meta($term_id, $amt_full_metatags_field_name);
+        } else {
+            update_term_meta($term_id, $amt_full_metatags_field_name, $full_metatags_value);
+        }
+    }
+
+    // Image URL
+    if ( $options['metabox_term_enable_image_url'] == '1' && current_user_can( $metabox_permissions['term_image_url_box_capability'] ) ) {
+        if ( empty($image_url_value) ) {
+            delete_term_meta($term_id, $amt_image_url_field_name);
+        } else {
+            update_term_meta($term_id, $amt_image_url_field_name, $image_url_value);
+        }
+    }
+
+}
+
+
+//
+//
+// Extra fields to WordPress user profiles
+//
+//
+
+function amt_user_profile_enqueue_scripts($hook) {
+    // Enqueue only on profile page.
+    if ( 'profile.php' != $hook ) {
+        return;
+    }
+    
+    // Using included Jquery UI
+    wp_enqueue_script('jquery');
+
+    // Necessary for the media selector.
+    // https://codex.wordpress.org/Javascript_Reference/wp.media
+    wp_enqueue_media();
+
+    // Register Add-Meta-Tags admin scripts
+    wp_register_script( 'amt_image_selector_script', plugins_url( 'js/amt-image-selector.js', AMT_PLUGIN_FILE ), array('jquery') );
+    // Enqueue the Add-Meta-Tags Admin Scripts
+    wp_enqueue_script( 'amt_image_selector_script' );
+}
+add_action( 'admin_enqueue_scripts', 'amt_user_profile_enqueue_scripts' );
+
+
+function amt_add_extra_section_fields_users() {
+    // Show/edit
+    add_action( 'show_user_profile', 'amt_user_extra_fields_show' );
+    add_action( 'edit_user_profile', 'amt_user_extra_fields_show' );
+
+    // Store data when created
+    add_action( 'personal_options_update', 'amt_user_extra_fields_save' );
+    add_action( 'edit_user_profile_update', 'amt_user_extra_fields_save' );
+}
+add_action('admin_init', 'amt_add_extra_section_fields_users');
+
+
+function amt_user_extra_fields_show( $user ) {
+
+    // Use a nonce field for verification
+    wp_nonce_field( plugin_basename( AMT_PLUGIN_FILE ), 'amt_noncename' );
+
+    // Get the Metadata metabox permissions (filtered)
+    $metabox_permissions = amt_get_metadata_metabox_permissions();
+
+    // Get the Add-Meta-Tags options.
+    $options = amt_get_options();
+
+    // Display the meta box HTML code.
+
+    $metabox_has_features = false;
+
+    print('
+    <!-- #add-meta-tags-settings is required by the media selector -->
+    <span id="add-meta-tags-settings">
+
+        <h3>'.__('Add-Meta-Tags', 'add-meta-tags').'</h3>
+
+        <table class="form-table">
+            <tbody>
+    ');
+
+    // per post full meta tags
+    // Full meta tags box permission check (can be user customized via filter).
+    if ( $options['metabox_user_enable_full_metatags'] == '1' && current_user_can( $metabox_permissions['user_full_metatags_box_capability'] ) ) {
+        $metabox_has_features = true;
+
+        // Retrieve the field data from the database.
+        $custom_full_metatags_value = amt_get_user_meta_full_metatags( $user->ID );
+
+        print('
+
+            <tr class="form-field user-amt_custom_full_metatags-wrap">
+            <th scope="row"><label for="amt_custom_full_metatags">'.__('Full meta tags', 'add-meta-tags').'</label></th>
+            <td>
+                <textarea class="large-text code" style="width: 99%" id="amt_custom_full_metatags" name="amt_custom_full_metatags" cols="50" rows="6" >'. stripslashes( $custom_full_metatags_value ) .'</textarea>
+                <p class="description">
+                    '.__('Provide the full XHTML code of extra <a target="_blank" href="http://en.wikipedia.org/wiki/Meta_element" target="_blank"><code>meta</code></a> and <code>link</code> <a target="_blank" href="https://en.wikipedia.org/wiki/HTML_element">HTML elements</a>. To automatically add paging information to URLs, append the <code>PAGEINFO</code> placeholder. For example:', 'add-meta-tags').'
+                    <br /><br />
+                    <code>&lt;meta name="robots" content="noodp,noarchive,notranslate,noimageindex" /&gt;</code>
+                    <br />
+                    <code>&lt;link rel="prefetch" href="http://www.example.org/landing-page.html" /&gt;</code>
+                    <br />
+                    <code>&lt;link rel="alternate" hreflang="el" href="http://example.org/section/multimedia/PAGEINFO" /&gt;</code>
+                    <br />
+                </p>
+            </td>
+            </tr>
+
+        ');
+
+    }
+
+
+    // Image URL (global override)
+    
+    // 'image_url' box permission check (can be user customized via filter).
+    if ( $options['metabox_user_enable_image_url'] == '1' && current_user_can( $metabox_permissions['user_image_url_box_capability'] ) ) {
+        $metabox_has_features = true;
+
+        // Retrieve the field data from the database.
+        $custom_image_url_value = amt_get_user_meta_image_url( $user->ID );
+
+        print('
+            <tr class="form-field user-amt_custom_image_url-wrap">
+            <th scope="row"><label for="amt_custom_image_url">'.__('Image URL', 'add-meta-tags').'</label></th>
+            <td>
+            <input type="text" class="code" style="width: 99%" size="40" id="amt_custom_image_url" name="amt_custom_image_url" value="' . amt_esc_id_or_url_notation( stripslashes( $custom_image_url_value ) ) . '" />
+
+            <span id="amt-image-selector-button" class="amt-image-selector-button wp-media-buttons-icon loadmediawindow button updatemeta button-small">'.__('Select image', 'add-meta-tags').'</span>
+            <br />
+
+            <p class="description">
+                '.__('Enter an absolute image URL in order to enforce the use of this image in the metadata. To specify the image dimensions you can use the special notation <code>URL,WIDTHxHEIGHT</code>.', 'add-meta-tags').'
+                '.__('Alternatively, you can select an image by pressing the <em>Select image</em> button.', 'add-meta-tags').'
+                <br />
+            </p>
+
+        ');
+
+            // Image preview
+            $image_data = amt_get_image_data( amt_esc_id_or_url_notation( stripslashes( $custom_image_url_value ) ) );
+            $img_html = '';
+            if ( is_numeric($image_data['id']) ) {
+                $main_size_meta = wp_get_attachment_image_src( $image_data['id'], 'medium' );
+                $img_html = '<img src="' . esc_url($main_size_meta[0]) . '" width="' . esc_attr($main_size_meta[1]) . '" height="' . esc_attr($main_size_meta[2]) . '" />';
+            } elseif ( ! is_null($image_data['url']) ) {
+                $img_html = '<img src="' . esc_url($image_data['url']) . '" width="' . esc_attr($image_data['width']) . '" height="' . esc_attr($image_data['height']) . '" />';
+            }
+            if ( ! empty($img_html) ) {
+                print('
+                <p>'.__('Image preview', 'add-meta-tags').':</p>
+                <br />
+                <div id="amt-image-preview" class="amt-image-preview">' . $img_html . '</div>
+                ');
+            }
+
+        print('
+
+            </td>
+            </tr>
+
+        ');
+
+    }
+
+    print('
+            </tbody>
+        </table>
+    ');
+
+    // If no features have been enabled, print an informative message
+    if ( $metabox_has_features === false ) {
+        print('
+            <p>'.__(sprintf( 'No features have been enabled for this metabox in the Add-Meta-Tags <a href="%s">settings</a> or you do not have enough permissions to access the available features.', admin_url( 'options-general.php?page=add-meta-tags-options' ) ), 'add-meta-tags').'</p>
+        ');
+    }
+
+    print('
+    </span> <!-- #add-meta-tags-settings -->
+    ');
+
+}
+
+
+// When the user profile is saved
+function amt_user_extra_fields_save( $user_id ) {
+
+    /* Verify the nonce before proceeding. */
+    // Verify this came from the our screen and with proper authorization,
+    // because save_post can be triggered at other times
+    if ( ! isset($_POST['amt_noncename']) || ! wp_verify_nonce( $_POST['amt_noncename'], plugin_basename( AMT_PLUGIN_FILE ) ) )
+        return;
+
+    // Get the Metadata metabox permissions (filtered)
+    $metabox_permissions = amt_get_metadata_metabox_permissions();
+
+    // Global Metadata metabox permission check (can be user customized via filter).
+    if ( ! current_user_can( $metabox_permissions['global_metabox_capability'] ) ) {
+        return;
+    }
+
+    // Get the Add-Meta-Tags options.
+    $options = amt_get_options();
+
+    // Check if the current user has permission to edit the post.
+	if ( ! current_user_can( 'edit_published_posts' ) ) {
+		return;
+    }
+
+    // OK, we're authenticated: we need to find and save the data
+
+    //
+    // Sanitize user input
+    //
+
+    // Full metatags - We allow only <meta> elements.
+    if ( isset( $_POST['amt_custom_full_metatags'] ) ) {
+        $full_metatags_value = esc_textarea( wp_kses( stripslashes( $_POST['amt_custom_full_metatags'] ), amt_get_allowed_html_kses() ) );
+    }
+    // Image URL
+    if ( isset( $_POST['amt_custom_image_url'] ) ) {
+        $image_url_value = amt_esc_id_or_url_notation( stripslashes( $_POST['amt_custom_image_url'] ) );
+    }
+
+    // If a value has not been entered we try to delete existing data from the database
+    // If the user has entered data, store it in the database.
+
+    // Add-Meta-Tags custom field names
+    $amt_full_metatags_field_name = '_amt_user_full_metatags';
+    $amt_image_url_field_name = '_amt_user_image_url';
+
+    // As an extra security measure, here we also check the user-defined per box
+    // permissions before we save any data in the database.
+
+    // per user profile full meta tags
+    if ( $options['metabox_user_enable_full_metatags'] == '1' && current_user_can( $metabox_permissions['user_full_metatags_box_capability'] ) ) {
+        if ( empty($full_metatags_value) ) {
+            delete_user_meta($user_id, $amt_full_metatags_field_name);
+        } else {
+            update_user_meta($user_id, $amt_full_metatags_field_name, $full_metatags_value);
+        }
+    }
+
+    // Image URL
+    if ( $options['metabox_user_enable_image_url'] == '1' && current_user_can( $metabox_permissions['user_image_url_box_capability'] ) ) {
+        if ( empty($image_url_value) ) {
+            delete_user_meta($user_id, $amt_image_url_field_name);
+        } else {
+            update_user_meta($user_id, $amt_image_url_field_name, $image_url_value);
+        }
+    }
+
+}
+
 
 

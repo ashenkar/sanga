@@ -9,7 +9,10 @@ class BVHttpClient {
 	var $conn;
 	var $mode;
 
-	function BVHttpClient() {
+	/**
+	 * PHP5 constructor.
+	 */
+	function __construct() {
 		global $blogvault;
 		$sno = "";
 		if (array_key_exists('svrno', $_REQUEST)) {
@@ -42,6 +45,13 @@ class BVHttpClient {
 			return;
 		}
 		socket_set_timeout($this->conn, $this->timeout);
+	}
+
+	/**
+	 * PHP4 constructor.
+	 */
+	function BVHttpClient() {
+		BVHttpClient::__construct();
 	}
 
 	function streamedPost($url, $headers = array()) {

@@ -2,7 +2,10 @@
 
 class BVSecurity {
 	var $config;
-	function BVSecurity() {
+	/**
+	 * PHP5 constructor.
+	 */
+	function __construct() {
 		global $blogvault;
 		$default_conf = array('max_failed_logins' => 10,
 			'login_entries' => 20,
@@ -21,6 +24,13 @@ class BVSecurity {
 			add_action('wp_login', array($this, 'loginSuccess'), 10, 2);
 			add_action('wp_login_failed', array($this, 'loginFailed'), 1, 1);
 		}
+	}
+
+	/**
+	 * PHP4 constructor.
+	 */
+	function BVSecurity() {
+		BVSecurity::__construct();
 	}
 
 	static public function &init() {

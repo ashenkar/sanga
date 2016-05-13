@@ -156,6 +156,10 @@ div.simpleTabsContent{
 html {
 background: #FFFFFF;
 }
+.size-full {
+    height: auto;
+    max-width: 100%;
+}
 </style>
 <div id="aio_admin_main">
 <form method="POST">
@@ -165,7 +169,7 @@ background: #FFFFFF;
     <li><a href="#">Main Settings</a></li>
 	<li><a href="#">Premium RightClick Protection</a></li>
 	<li><a href="#">Premium Protection by CSS</a></li>
-    <li><a href="#">About</a></li>
+    <li><a href="#">More with pro</a></li>
 </ul>
 <div class="simpleTabsContent">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -327,7 +331,7 @@ background: #FFFFFF;
 				<td height="264" colspan="2">
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<a href="http://www.wp-buy.com/product/wp-content-copy-protection-pro/">
-				<img border="1" src="<?php echo $pluginsurl ?>/images/premium2.png" style="border: 1px dotted #C0C0C0"></a><p>&nbsp;</td>
+				<img class="size-full" border="1" src="<?php echo $pluginsurl ?>/images/right-click-protection.jpg" style="border: 1px dotted #C0C0C0"></a><p>&nbsp;</td>
 			</tr>
 			</table></div>
 </div>
@@ -386,28 +390,18 @@ background: #FFFFFF;
 
 </div>
 <div class="simpleTabsContent" id="layer1">
-
-		<font color="#FFFFFF">
-
-		<b>
-
-		<font face="Tahoma" size="2"><span style="background-color: #000000">About WP Content Copy Protection:</span></font><span style="background-color: #000000">
-		</span>
-			</b>
-			</font>
-		<ul>
-			<li><font face="Tahoma" style="font-size: 10pt">This wp plugin protect the posts content from being copied by any 
-		other web site author , you don't want your content to spread without 
-		your permission!!</font></li>
-			<li><font face="Tahoma" size="2">Improve your seo score in Google and Yahoo and other SE's:
-			</font><font face="Tahoma" style="font-size: 10pt">Our plugin protect your content from being copied by any other web 
-		sites so your posts will still unique content, this is the best option 
-		for seo</font></li>
-			<li><font face="Tahoma" size="2">Don't Let Your Stories Go to web 
-			thief !</font><font face="Tahoma" style="font-size: 10pt"> The plugin will keep your posts and home page protected by multiple 
-		techniques (JavaScript + CSS), this techniques does not found in any 
-		other wordpress plugin and you will own it for free with this plugin</font></li>
-		</ul>
+		<a href="http://www.wp-buy.com/product/wp-content-copy-protection-pro/">
+		<img class="size-full" border="1" src="<?php echo $pluginsurl ?>/images/smart-phones-protection.png" style="border: 1px dotted #C0C0C0">
+		</a>
+		<p></p>
+		<a href="http://www.wp-buy.com/product/wp-content-copy-protection-pro/">
+		<img class="size-full" border="1" src="<?php echo $pluginsurl ?>/images/watermark-adv.jpg" style="border: 1px dotted #C0C0C0">
+		</a>
+		<p></p>
+		<a href="http://www.wp-buy.com/product/wp-content-copy-protection-pro/">
+		<img class="size-full" border="1" src="<?php echo $pluginsurl ?>/images/watermarking-adv-examples.png" style="border: 1px dotted #C0C0C0">
+		</a>
+		<p></p>
 		<p><b><font face="Tahoma" size="2" color="#FFFFFF">
 		<span style="background-color: #008000">Basic features:</span></font></b></p>
 		<ul>
@@ -432,6 +426,7 @@ background: #FFFFFF;
 		<ul>
 			<li><font style="font-size: 10pt" face="Tahoma">Get full Control on 
 			Right click or context menu</font></li>
+			<li><font style="font-size: 10pt" face="Tahoma">Full watermarking</font></li>
 			<li><font style="font-size: 10pt" face="Tahoma">Show alert messages, 
 			when user made right click on images, text boxes, links, plain 
 			text.. etc</font></li>

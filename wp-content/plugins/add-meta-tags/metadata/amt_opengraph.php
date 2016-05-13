@@ -19,7 +19,7 @@
  *
  *  Licensing Information
  *
- *  Copyright 2006-2013 George Notaras <gnot@g-loaded.eu>, CodeTRAX.org
+ *  Copyright 2006-2016 George Notaras <gnot@g-loaded.eu>, CodeTRAX.org
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -93,6 +93,10 @@ add_filter( 'user_contactmethods', 'amt_add_facebook_contactmethod', 10, 1 );
  */
 function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, $options ) {
 
+    if ( apply_filters('amt_exclude_opengraph_metadata', false) ) {
+        return array();
+    }
+
     $do_auto_opengraph = (($options["auto_opengraph"] == "1") ? true : false );
     if (!$do_auto_opengraph) {
         return array();
@@ -115,20 +119,28 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
     //}
     // no publisher meta tag for facebook, unless it is content
 
+    // Custom content override
+    if ( amt_is_custom($post, $options) ) {
+
+        // Return metadata with:
+        // add_filter( 'amt_custom_metadata_opengraph', 'my_function', 10, 5 );
+        // Return an array of meta tags. Array item format: ['key_can_be_whatever'] = '<meta name="foo" content="bar" />'
+        $metadata_arr = apply_filters( 'amt_custom_metadata_opengraph', $metadata_arr, $post, $options, $attachments, $embedded_media );
+
     // Default front page displaying the latest posts
-    if ( amt_is_default_front_page() ) {
+    } elseif ( amt_is_default_front_page() ) {
 
         // Type
-        $metadata_arr[] = '<meta property="og:type" content="website" />';
+        $metadata_arr['og:type'] = '<meta property="og:type" content="website" />';
         // Site Name
-        $metadata_arr[] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
+        $metadata_arr['og:site_name'] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
         // Title - Note: Contains multipage information
         $metadata_arr['og:title'] = '<meta property="og:title" content="' . esc_attr( amt_get_title_for_metadata($options, $post) ) . '" />';
         // URL - Note: different method to get the permalink on paged archives
         if ( is_paged() ) {
-            $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( get_pagenum_link( get_query_var('paged') ) ) . '" />';
+            $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( get_pagenum_link( get_query_var('paged') ) ) . '" />';
         } else {
-            $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( trailingslashit( get_bloginfo('url') ) ) . '" />';
+            $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( trailingslashit( get_bloginfo('url') ) ) . '" />';
         }
         // Site description - Note: Contains multipage information through amt_process_paged()
         $site_description = amt_get_site_description($options);
@@ -136,19 +148,18 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
             $site_description = get_bloginfo('description');
         }
         if ( ! empty($site_description) ) {
-            $metadata_arr[] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $site_description ) ) . '" />';
+            $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $site_description ) ) . '" />';
         }
         // Locale
-        $metadata_arr[] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_site($options)) ) . '" />';
+        $metadata_arr['og:locale'] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_site($options)) ) . '" />';
         // Site Image
         // Use the default image, if one has been set.
-        if (!empty($options["default_image_url"])) {
-            $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $options["default_image_url"] ) . '" />';
-            // If the current connection uses HTTPS, then generate og:image:secure_url
-            // If the current connection does not use HTTPS, but the "has_https_access" is enabled, then generate og:image:secure_url
-            // According to Facebook, if the web site requires HTTPS, og:image:secure_url is required even if og:image contains an HTTPS URL
-            if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
-                $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $options["default_image_url"] ) ) . '" />';
+        $image_data = amt_get_default_image_data();
+        if ( ! empty($image_data) ) {
+            $image_size = apply_filters( 'amt_image_size_index', 'full' );
+            $image_meta_tags = amt_get_opengraph_image_metatags( $options, $image_data, $size=$image_size );
+            if ( ! empty($image_meta_tags) ) {
+                $metadata_arr = array_merge( $metadata_arr, $image_meta_tags );
             }
         }
 
@@ -158,47 +169,82 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
     } elseif ( amt_is_static_front_page() ) {
 
         // Type
-        $metadata_arr[] = '<meta property="og:type" content="website" />';
+        if ( $options['author_profile_source'] == 'frontpage' ) {
+            // The front page is treated as the profile page.
+            $metadata_arr['og:type'] = '<meta property="og:type" content="profile" />';
+        } else {
+            $metadata_arr['og:type'] = '<meta property="og:type" content="website" />';
+        }
+
         // Site Name
-        $metadata_arr[] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
+        $metadata_arr['og:site_name'] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
         // Title - Note: Contains multipage information
         $metadata_arr['og:title'] = '<meta property="og:title" content="' . esc_attr( amt_get_title_for_metadata($options, $post) ) . '" />';
         // URL - Note: different method to get the permalink on paged archives
         if ( is_paged() ) {
-            $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( get_pagenum_link( get_query_var('paged') ) ) . '" />';
+            $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( get_pagenum_link( get_query_var('paged') ) ) . '" />';
         } else {
-            $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( trailingslashit( get_bloginfo('url') ) ) . '" />';
+            $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( trailingslashit( get_bloginfo('url') ) ) . '" />';
         }
         // Site Description - Note: Contains multipage information through amt_process_paged()
         $content_desc = amt_get_content_description($post);
         if ( !empty($content_desc) ) {
             // Use the pages custom description
-            $metadata_arr[] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $content_desc ) ) . '" />';
+            $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $content_desc ) ) . '" />';
         } elseif (get_bloginfo('description')) {
             // Alternatively use the blog's description
-            $metadata_arr[] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( get_bloginfo('description') ) ) . '" />';
+            $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( get_bloginfo('description') ) ) . '" />';
         }
         // Locale
-        $metadata_arr[] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_content($options, $post)) ) . '" />';
+        $metadata_arr['og:locale'] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_content($options, $post)) ) . '" />';
         // Site Image
         // First check if a global image override URL has been entered.
         // If yes, use this image URL and override all other images.
-        $global_image_override_url = amt_get_post_meta_image_url($post->ID);
-        if ( ! empty( $global_image_override_url ) ) {
-            $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $global_image_override_url ) . '" />';
-            if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
-                $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $global_image_override_url ) ) . '" />';
+        $image_data = amt_get_image_data( amt_get_post_meta_image_url($post->ID) );
+        if ( ! empty($image_data) ) {
+            $image_size = apply_filters( 'amt_image_size_index', 'full' );
+            $image_meta_tags = amt_get_opengraph_image_metatags( $options, $image_data, $size=$image_size );
+            if ( ! empty($image_meta_tags) ) {
+                $metadata_arr = array_merge( $metadata_arr, $image_meta_tags );
             }
+        //$global_image_override_url = amt_get_post_meta_image_url($post->ID);
+        //if ( ! empty( $global_image_override_url ) ) {
+        //    $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $global_image_override_url ) . '" />';
+        //    if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
+        //        $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $global_image_override_url ) ) . '" />';
+        //    }
         // Then try the featured image, if exists.
         } elseif ( function_exists('has_post_thumbnail') && has_post_thumbnail( $post->ID ) ) {
             // Allow filtering of the image size.
             $image_size = apply_filters( 'amt_image_size_index', 'full' );
             $metadata_arr = array_merge( $metadata_arr, amt_get_opengraph_image_metatags( $options, get_post_thumbnail_id( $post->ID ), $size=$image_size ) );
-        } elseif (!empty($options["default_image_url"])) {
+        } else {
+            // Use the default image, if one has been set.
+            $image_data = amt_get_default_image_data();
+            if ( ! empty($image_data) ) {
+                $image_size = apply_filters( 'amt_image_size_index', 'full' );
+                $image_meta_tags = amt_get_opengraph_image_metatags( $options, $image_data, $size=$image_size );
+                if ( ! empty($image_meta_tags) ) {
+                    $metadata_arr = array_merge( $metadata_arr, $image_meta_tags );
+                }
+            }
             // Alternatively, use default image
-            $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $options["default_image_url"] ) . '" />';
-            if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
-                $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $options["default_image_url"] ) ) . '" />';
+            //$metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $options["default_image_url"] ) . '" />';
+            //if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
+            //    $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $options["default_image_url"] ) ) . '" />';
+            //}
+        }
+
+        // Profile data (only if the front page has been set as the source of profile.)
+        if ( $options['author_profile_source'] == 'frontpage' ) {
+            // Profile first and last name
+            $last_name = get_the_author_meta( 'last_name', $post->post_author );
+            if ( !empty($last_name) ) {
+                $metadata_arr[] = '<meta property="profile:last_name" content="' . esc_attr( $last_name ) . '" />';
+            }
+            $first_name = get_the_author_meta( 'first_name', $post->post_author );
+            if ( !empty($first_name) ) {
+                $metadata_arr[] = '<meta property="profile:first_name" content="' . esc_attr( $first_name ) . '" />';
             }
         }
 
@@ -207,48 +253,64 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
     } elseif ( amt_is_static_home() ) {
 
         // Type
-        $metadata_arr[] = '<meta property="og:type" content="website" />';
+        $metadata_arr['og:type'] = '<meta property="og:type" content="website" />';
         // Site Name
-        $metadata_arr[] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
+        $metadata_arr['og:site_name'] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
         // Title - Note: Contains multipage information
         $metadata_arr['og:title'] = '<meta property="og:title" content="' . esc_attr( amt_get_title_for_metadata($options, $post) ) . '" />';
         // URL - Note: different method to get the permalink on paged archives
         if ( is_paged() ) {
-            $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( get_pagenum_link( get_query_var('paged') ) ) . '" />';
+            $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( get_pagenum_link( get_query_var('paged') ) ) . '" />';
         } else {
-            $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( get_permalink($post->ID) ) . '" />';
+            $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( get_permalink($post->ID) ) . '" />';
         }
         // Site Description - Note: Contains multipage information through amt_process_paged()
         $content_desc = amt_get_content_description($post);
         if ( !empty($content_desc) ) {
             // Use the pages custom description
-            $metadata_arr[] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $content_desc ) ) . '" />';
+            $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $content_desc ) ) . '" />';
         } elseif (get_bloginfo('description')) {
             // Alternatively use a generic description
-            $metadata_arr[] = '<meta property="og:description" content="' . amt_process_paged( "An index of the latest content." ) . '" />';
+            $metadata_arr['og:description'] = '<meta property="og:description" content="' . amt_process_paged( "An index of the latest content." ) . '" />';
         }
         // Locale
-        $metadata_arr[] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_content($options, $post)) ) . '" />';
+        $metadata_arr['og:locale'] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_content($options, $post)) ) . '" />';
         // Site Image
         // First check if a global image override URL has been entered.
         // If yes, use this image URL and override all other images.
-        $global_image_override_url = amt_get_post_meta_image_url($post->ID);
-        if ( ! empty( $global_image_override_url ) ) {
-            $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $global_image_override_url ) . '" />';
-            if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
-                $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $global_image_override_url ) ) . '" />';
+        $image_data = amt_get_image_data( amt_get_post_meta_image_url($post->ID) );
+        if ( ! empty($image_data) ) {
+            $image_size = apply_filters( 'amt_image_size_index', 'full' );
+            $image_meta_tags = amt_get_opengraph_image_metatags( $options, $image_data, $size=$image_size );
+            if ( ! empty($image_meta_tags) ) {
+                $metadata_arr = array_merge( $metadata_arr, $image_meta_tags );
             }
+        //$global_image_override_url = amt_get_post_meta_image_url($post->ID);
+        //if ( ! empty( $global_image_override_url ) ) {
+        //    $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $global_image_override_url ) . '" />';
+        //    if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
+        //        $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $global_image_override_url ) ) . '" />';
+        //    }
         // Then try the featured image, if exists.
         } elseif ( function_exists('has_post_thumbnail') && has_post_thumbnail( $post->ID ) ) {
             // Allow filtering of the image size.
             $image_size = apply_filters( 'amt_image_size_index', 'full' );
             $metadata_arr = array_merge( $metadata_arr, amt_get_opengraph_image_metatags( $options, get_post_thumbnail_id( $post->ID ), $size=$image_size ) );
-        } elseif (!empty($options["default_image_url"])) {
-            // Alternatively, use default image
-            $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $options["default_image_url"] ) . '" />';
-            if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
-                $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $options["default_image_url"] ) ) . '" />';
+        } else {
+            // Use the default image, if one has been set.
+            $image_data = amt_get_default_image_data();
+            if ( ! empty($image_data) ) {
+                $image_size = apply_filters( 'amt_image_size_index', 'full' );
+                $image_meta_tags = amt_get_opengraph_image_metatags( $options, $image_data, $size=$image_size );
+                if ( ! empty($image_meta_tags) ) {
+                    $metadata_arr = array_merge( $metadata_arr, $image_meta_tags );
+                }
             }
+            // Alternatively, use default image
+            //$metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $options["default_image_url"] ) . '" />';
+            //if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
+            //    $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $options["default_image_url"] ) ) . '" />';
+            //}
         }
 
 
@@ -265,12 +327,12 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
         // Type
         // In case of a product group taxonomy, we set the og:type to product.group
         if ( amt_is_product_group() ) {
-            $metadata_arr[] = '<meta property="og:type" content="product.group" />';
+            $metadata_arr['og:type'] = '<meta property="og:type" content="product.group" />';
         } else {
-            $metadata_arr[] = '<meta property="og:type" content="website" />';
+            $metadata_arr['og:type'] = '<meta property="og:type" content="website" />';
         }
         // Site Name
-        $metadata_arr[] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
+        $metadata_arr['og:site_name'] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
         // Title - Note: Contains multipage information
         $metadata_arr['og:title'] = '<meta property="og:title" content="' . esc_attr( amt_get_title_for_metadata($options, $post) ) . '" />';
         // URL - Note: different method to get the permalink on paged archives
@@ -278,7 +340,7 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
         if ( is_paged() ) {
             $url = trailingslashit( $url ) . get_query_var('paged') . '/';
         }
-        $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( $url ) . '" />';
+        $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( $url ) . '" />';
         // Description
         // If set, the description of the custom taxonomy term is used in the 'description' metatag.
         // Otherwise, a generic description is used.
@@ -301,28 +363,47 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
             }
             // Final generic description
             $generic_description = sprintf( $generic_description, single_term_title( $prefix='', $display=false ) );
-            $metadata_arr[] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $generic_description ) ) . '" />';
+            $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $generic_description ) ) . '" />';
         } else {
-            $metadata_arr[] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $description_content ) ) . '" />';
+            $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $description_content ) ) . '" />';
         }
         // Locale
-        $metadata_arr[] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_site($options)) ) . '" />';
+        $metadata_arr['og:locale'] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_site($options)) ) . '" />';
         // Image
-        // Use a user defined image via filter. Otherwise use default image.
-        // First filter using a term/taxonomy agnostic filter name.
-        $taxonomy_image_url = apply_filters( 'amt_taxonomy_force_image_url', '', $tax_term_object );
-        if ( empty($taxonomy_image_url) ) {
-            // Second filter (term/taxonomy dependent).
-            // Construct the filter name. Template: ``amt_taxonomy_image_url_TAXONOMYSLUG_TERMSLUG``
-            $taxonomy_image_url_filter_name = sprintf( 'amt_taxonomy_image_url_%s_%s', $tax_term_object->taxonomy, $tax_term_object->slug);
-            //var_dump($taxonomy_image_url_filter_name);
-            // The default image, if set, is used by default.
-            $taxonomy_image_url = apply_filters( $taxonomy_image_url_filter_name, $options["default_image_url"] );
-        }
-        if ( ! empty( $taxonomy_image_url ) ) {
-            $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $taxonomy_image_url ) . '" />';
-            if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
-                $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $taxonomy_image_url ) ) . '" />';
+        // Use an image from the 'Global image override' field.
+        // Otherwise, use a user defined image via filter.
+        // Otherwise use default image.
+        $image_data = amt_get_image_data( amt_get_term_meta_image_url( $tax_term_object->term_id ) );
+        if ( ! empty($image_data) ) {
+            $image_size = apply_filters( 'amt_image_size_index', 'full' );
+            $image_meta_tags = amt_get_opengraph_image_metatags( $options, $image_data, $size=$image_size );
+            if ( ! empty($image_meta_tags) ) {
+                $metadata_arr = array_merge( $metadata_arr, $image_meta_tags );
+            }
+        } else {
+            // First filter using a term/taxonomy agnostic filter name.
+            $taxonomy_image_url = apply_filters( 'amt_taxonomy_force_image_url', '', $tax_term_object );
+            if ( empty($taxonomy_image_url) ) {
+                // Second filter (term/taxonomy dependent).
+                // Construct the filter name. Template: ``amt_taxonomy_image_url_TAXONOMYSLUG_TERMSLUG``
+                $taxonomy_image_url_filter_name = sprintf( 'amt_taxonomy_image_url_%s_%s', $tax_term_object->taxonomy, $tax_term_object->slug);
+                //var_dump($taxonomy_image_url_filter_name);
+                // The default image, if set, is used by default.
+                $taxonomy_image_url = apply_filters( $taxonomy_image_url_filter_name, $options["default_image_url"] );
+            }
+            if ( ! empty( $taxonomy_image_url ) ) {
+                $image_data = amt_get_image_data( $taxonomy_image_url );
+                if ( ! empty($image_data) ) {
+                    $image_size = apply_filters( 'amt_image_size_index', 'full' );
+                    $image_meta_tags = amt_get_opengraph_image_metatags( $options, $image_data, $size=$image_size );
+                    if ( ! empty($image_meta_tags) ) {
+                        $metadata_arr = array_merge( $metadata_arr, $image_meta_tags );
+                    }
+                }
+                //$metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $taxonomy_image_url ) . '" />';
+                //if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
+                //    $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $taxonomy_image_url ) ) . '" />';
+                //}
             }
         }
 
@@ -341,14 +422,15 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
         $author = $post;
 
         // Type
-        if ( ! is_paged() ) {
-            // We treat the first page of the archive as a profile
-            $metadata_arr[] = '<meta property="og:type" content="profile" />';
+        if ( ! is_paged() &&  $options['author_profile_source'] == 'default' ) {
+            // We treat the first page of the archive as a profile, only if
+            // the profile source has been set to 'default'
+            $metadata_arr['og:type'] = '<meta property="og:type" content="profile" />';
         } else {
-            $metadata_arr[] = '<meta property="og:type" content="website" />';
+            $metadata_arr['og:type'] = '<meta property="og:type" content="website" />';
         }
         // Site Name
-        $metadata_arr[] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
+        $metadata_arr['og:site_name'] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
         // Title - Note: Contains multipage information
         //if ( ! is_paged() ) {
         //    // We treat the first page of the archive as a profile
@@ -363,63 +445,75 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
         // Otherwise fall back to the WordPress author archive.
         $fb_author_url = $author->amt_facebook_author_profile_url;
         if ( !empty($fb_author_url) ) {
-            $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( $fb_author_url, array('http', 'https') ) . '" />';
+            $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( $fb_author_url, array('http', 'https') ) . '" />';
         } else {
             if ( is_paged() ) {
-                $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( get_pagenum_link( get_query_var('paged') ) ) . '" />';
+                $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( get_pagenum_link( get_query_var('paged') ) ) . '" />';
             } else {
-                $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( get_author_posts_url( $author->ID ) ) . '" />';
+                $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( get_author_posts_url( $author->ID ) ) . '" />';
+                // The following makes no sense here. 'get_author_posts_url( $author->ID )' will do in all cases.
+                //$metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( amt_get_local_author_profile_url( $author->ID, $options ) ) . '" />';
             }
         }
         // description - Note: Contains multipage information through amt_process_paged()
         if ( is_paged() ) {
-            $metadata_arr[] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( "Content published by " . $author->display_name ) ) . '" />';
+            $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( "Content published by " . $author->display_name ) ) . '" />';
         } else {
             // Here we sanitize the provided description for safety
             // We treat the first page of the archive as a profile
             $author_description = sanitize_text_field( amt_sanitize_description( $author->description ) );
             if ( empty($author_description) ) {
-                $metadata_arr[] = '<meta property="og:description" content="' . esc_attr( "Content published by " . $author->display_name ) . '" />';
+                $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( "Content published by " . $author->display_name ) . '" />';
             } else {
-                $metadata_arr[] = '<meta property="og:description" content="' . esc_attr( $author_description ) . '" />';
+                $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( $author_description ) . '" />';
             }
         }
         // Locale
-        $metadata_arr[] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_site($options)) ) . '" />';
+        $metadata_arr['og:locale'] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_site($options)) ) . '" />';
 
         // Profile Image
-        $author_email = sanitize_email( $author->user_email );
-        $avatar_size = apply_filters( 'amt_avatar_size', 128 );
-        $avatar_url = '';
-        // First try to get the avatar link by using get_avatar().
-        // Important: for this to work the "Show Avatars" option should be enabled in Settings > Discussion.
-        $avatar_img = get_avatar( get_the_author_meta('ID', $author->ID), $avatar_size, '', get_the_author_meta('display_name', $author->ID) );
-        if ( ! empty($avatar_img) ) {
-            if ( preg_match("#src=['\"]([^'\"]+)['\"]#", $avatar_img, $matches) ) {
-                $avatar_url = $matches[1];
+        // First use the global image override URL
+        $image_data = amt_get_image_data( amt_get_user_meta_image_url( $author->ID ) );
+        if ( ! empty($image_data) ) {
+            $image_size = apply_filters( 'amt_image_size_index', 'full' );
+            $image_meta_tags = amt_get_opengraph_image_metatags( $options, $image_data, $size=$image_size );
+            if ( ! empty($image_meta_tags) ) {
+                $metadata_arr = array_merge( $metadata_arr, $image_meta_tags );
             }
-        } elseif ( ! empty($author_email) ) {
-            // If the user has provided an email, we use it to construct a gravatar link.
-            $avatar_url = "http://www.gravatar.com/avatar/" . md5( $author_email ) . "?s=" . $avatar_size;
-        }
-        if ( ! empty($avatar_url) ) {
-            //$avatar_url = html_entity_decode($avatar_url, ENT_NOQUOTES, 'UTF-8');
-            $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $avatar_url ) . '" />';
-            // Add an og:imagesecure_url if the image URL uses HTTPS
-            if ( strpos($avatar_url, 'https://') !== false ) {
-                $metadata_arr[] = '<meta property="og:imagesecure_url" content="' . esc_url_raw( $avatar_url ) . '" />';
+        } else {
+            $author_email = sanitize_email( $author->user_email );
+            $avatar_size = apply_filters( 'amt_avatar_size', 128 );
+            $avatar_url = '';
+            // First try to get the avatar link by using get_avatar().
+            // Important: for this to work the "Show Avatars" option should be enabled in Settings > Discussion.
+            $avatar_img = get_avatar( get_the_author_meta('ID', $author->ID), $avatar_size, '', get_the_author_meta('display_name', $author->ID) );
+            if ( ! empty($avatar_img) ) {
+                if ( preg_match("#src=['\"]([^'\"]+)['\"]#", $avatar_img, $matches) ) {
+                    $avatar_url = $matches[1];
+                }
+            } elseif ( ! empty($author_email) ) {
+                // If the user has provided an email, we use it to construct a gravatar link.
+                $avatar_url = "http://www.gravatar.com/avatar/" . md5( $author_email ) . "?s=" . $avatar_size;
             }
-            if ( apply_filters( 'amt_extended_image_tags', true ) ) {
-                $metadata_arr[] = '<meta property="og:image:width" content="' . esc_attr( $avatar_size ) . '" />';
-                $metadata_arr[] = '<meta property="og:image:height" content="' . esc_attr( $avatar_size ) . '" />';
-                // Since we do not have a way to determine the image type, the following meta tag is commented out
-                // TODO: make a function that detects the image type from the file extension (if a file extension is available)
-                //$metadata_arr[] = '<meta property="og:image:type" content="image/jpeg" />';
+            if ( ! empty($avatar_url) ) {
+                //$avatar_url = html_entity_decode($avatar_url, ENT_NOQUOTES, 'UTF-8');
+                $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $avatar_url ) . '" />';
+                // Add an og:imagesecure_url if the image URL uses HTTPS
+                if ( strpos($avatar_url, 'https://') !== false ) {
+                    $metadata_arr[] = '<meta property="og:imagesecure_url" content="' . esc_url_raw( $avatar_url ) . '" />';
+                }
+                if ( apply_filters( 'amt_extended_image_tags', true ) ) {
+                    $metadata_arr[] = '<meta property="og:image:width" content="' . esc_attr( $avatar_size ) . '" />';
+                    $metadata_arr[] = '<meta property="og:image:height" content="' . esc_attr( $avatar_size ) . '" />';
+                    // Since we do not have a way to determine the image type, the following meta tag is commented out
+                    // TODO: make a function that detects the image type from the file extension (if a file extension is available)
+                    //$metadata_arr[] = '<meta property="og:image:type" content="image/jpeg" />';
+                }
             }
         }
 
         // Profile data (only on the 1st page of the archive)
-        if ( ! is_paged() ) {
+        if ( ! is_paged() &&  $options['author_profile_source'] == 'default' ) {
             // Profile first and last name
             $last_name = $author->last_name;
             if ( !empty($last_name) ) {
@@ -429,6 +523,66 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
             if ( !empty($first_name) ) {
                 $metadata_arr[] = '<meta property="profile:first_name" content="' . esc_attr( $first_name ) . '" />';
             }
+        }
+
+
+    // Custom Post Type archives
+    } elseif ( is_post_type_archive() ) {
+        // Custom post type object.
+        // When viewing custom post type archives, the $post object is the custom post type object. Check with: var_dump($post);
+        $post_type_object = $post;
+        //var_dump($post_type_object);
+
+        // Type
+        $metadata_arr['og:type'] = '<meta property="og:type" content="website" />';
+        // Site Name
+        $metadata_arr['og:site_name'] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
+        // Title - Note: Contains multipage information
+        $metadata_arr['og:title'] = '<meta property="og:title" content="' . esc_attr( amt_get_title_for_metadata($options, $post) ) . '" />';
+        // URL - Note: different method to get the permalink on paged archives
+        $url = get_post_type_archive_link($post_type_object->name);
+        if ( is_paged() ) {
+            $url = trailingslashit( $url ) . get_query_var('paged') . '/';
+        }
+        $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( $url ) . '" />';
+        // Description
+        // Note: Contains multipage information through amt_process_paged()
+        // Add a filtered generic description.
+        // Construct the filter name. Template: ``amt_generic_description_posttype_POSTTYPESLUG_archive``
+        $custom_post_type_description_filter_name = sprintf( 'amt_generic_description_posttype_%s_archive', $post_type_object->name);
+        // var_dump($custom_post_type_description_filter_name);
+        // Generic description
+        $generic_description = apply_filters( $custom_post_type_description_filter_name, __('%s archive.', 'add-meta-tags') );
+        // Final generic description
+        $generic_description = sprintf( $generic_description, post_type_archive_title( $prefix='', $display=false ) );
+        $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $generic_description ) ) . '" />';
+        // Locale
+        $metadata_arr['og:locale'] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_site($options)) ) . '" />';
+        // Image
+        // Use a user defined image via filter. Otherwise use default image.
+        // First filter using a term/taxonomy agnostic filter name.
+        $posttype_image_url = apply_filters( 'amt_posttype_force_image_url', '', $post_type_object );
+        if ( empty($posttype_image_url) ) {
+            // Second filter (post type dependent).
+            // Construct the filter name. Template: ``amt_posttype_image_url_POSTTYPESLUG``
+            $posttype_image_url_filter_name = sprintf( 'amt_posttype_image_url_%s', $post_type_object->name);
+            //var_dump($posttype_image_url_filter_name);
+            // The default image, if set, is used by default.
+            $posttype_image_url = apply_filters( $posttype_image_url_filter_name, $options["default_image_url"] );
+        }
+        if ( ! empty( $posttype_image_url ) ) {
+            $image_data = amt_get_image_data( $posttype_image_url );
+            if ( ! empty($image_data) ) {
+                $image_size = apply_filters( 'amt_image_size_index', 'full' );
+                $image_meta_tags = amt_get_opengraph_image_metatags( $options, $image_data, $size=$image_size );
+                if ( ! empty($image_meta_tags) ) {
+                    $metadata_arr = array_merge( $metadata_arr, $image_meta_tags );
+                }
+            }
+            //$metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $posttype_image_url ) . '" />';
+            //if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
+            //    $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $posttype_image_url ) ) . '" />';
+            //}
         }
 
 
@@ -452,24 +606,24 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
             $og_type = 'article';
         }
         $og_type = apply_filters( 'amt_opengraph_og_type_attachment', $og_type );
-        $metadata_arr[] = '<meta property="og:type" content="' . esc_attr( $og_type ) . '" />';
+        $metadata_arr['og:type'] = '<meta property="og:type" content="' . esc_attr( $og_type ) . '" />';
 
         // Site Name
-        $metadata_arr[] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
+        $metadata_arr['og:site_name'] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
         // Title
         $metadata_arr['og:title'] = '<meta property="og:title" content="' . esc_attr( amt_get_title_for_metadata($options, $post) ) . '" />';
         // URL
-        $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( get_permalink($post->ID) ) . '" />';
+        $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( get_permalink($post->ID) ) . '" />';
         // Description - We use the description defined by Add-Meta-Tags
         $content_desc = amt_get_content_description($post);
         if ( !empty($content_desc) ) {
-            $metadata_arr[] = '<meta property="og:description" content="' . esc_attr( $content_desc ) . '" />';
+            $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( $content_desc ) . '" />';
         }
         // Locale
-        $metadata_arr[] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_content($options, $post)) ) . '" />';
+        $metadata_arr['og:locale'] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_content($options, $post)) ) . '" />';
 
         // og:updated_time
-        $metadata_arr[] = '<meta property="og:updated_time" content="' . esc_attr( amt_iso8601_date($post->post_modified) ) . '" />';
+        $metadata_arr['og:updated_time'] = '<meta property="og:updated_time" content="' . esc_attr( amt_iso8601_date($post->post_modified) ) . '" />';
 
         // Metadata specific to each attachment type
 
@@ -506,24 +660,25 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
         // Article: meta tags
 
         // Dates
-        $metadata_arr[] = '<meta property="article:published_time" content="' . esc_attr( amt_iso8601_date($post->post_date) ) . '" />';
-        $metadata_arr[] = '<meta property="article:modified_time" content="' . esc_attr( amt_iso8601_date($post->post_modified) ) . '" />';
+        $metadata_arr['article:published_time'] = '<meta property="article:published_time" content="' . esc_attr( amt_iso8601_date($post->post_date) ) . '" />';
+        $metadata_arr['article:modified_time'] = '<meta property="article:modified_time" content="' . esc_attr( amt_iso8601_date($post->post_modified) ) . '" />';
         // Author
         // If a Facebook author profile URL has been provided, it has priority,
         // Otherwise fall back to the WordPress author archive.
         $fb_author_url = get_the_author_meta('amt_facebook_author_profile_url', $post->post_author);
         if ( !empty($fb_author_url) ) {
-            $metadata_arr[] = '<meta property="article:author" content="' . esc_url_raw( $fb_author_url, array('http', 'https', 'mailto') ) . '" />';
+            $metadata_arr['article:author'] = '<meta property="article:author" content="' . esc_url_raw( $fb_author_url, array('http', 'https', 'mailto') ) . '" />';
         } else {
-            $metadata_arr[] = '<meta property="article:author" content="' . esc_url_raw( get_author_posts_url( get_the_author_meta( 'ID', $post->post_author ) ) ) . '" />';
+            //$metadata_arr['article:author'] = '<meta property="article:author" content="' . esc_url_raw( get_author_posts_url( get_the_author_meta( 'ID', $post->post_author ) ) ) . '" />';
+            $metadata_arr['article:author'] = '<meta property="article:author" content="' . esc_url_raw( amt_get_local_author_profile_url( get_the_author_meta( 'ID', $post->post_author ), $options ) ) . '" />';
         }
         // Publisher
         // If a Facebook publisher profile URL has been provided, it has priority.
         // Otherwise fall back to the WordPress blog home url.
         if ( ! empty($options['social_main_facebook_publisher_profile_url']) ) {
-            $metadata_arr[] = '<meta property="article:publisher" content="' . esc_url_raw( $options['social_main_facebook_publisher_profile_url'], array('http', 'https', 'mailto') ) . '" />';
+            $metadata_arr['article:publisher'] = '<meta property="article:publisher" content="' . esc_url_raw( $options['social_main_facebook_publisher_profile_url'], array('http', 'https', 'mailto') ) . '" />';
         } else {
-            $metadata_arr[] = '<meta property="article:publisher" content="' . esc_url_raw( trailingslashit( get_bloginfo('url') ) ) . '" />';
+            $metadata_arr['article:publisher'] = '<meta property="article:publisher" content="' . esc_url_raw( trailingslashit( get_bloginfo('url') ) ) . '" />';
         }
 
 
@@ -532,7 +687,7 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
     } elseif ( is_singular() ) {
 
         // Site Name
-        $metadata_arr[] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
+        $metadata_arr['og:site_name'] = '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . '" />';
 
         // Type
         // og:type set to 'video.other' for posts with post format set to video
@@ -551,35 +706,42 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
         // Allow filtering of og:type
         $og_type = apply_filters( 'amt_opengraph_og_type_content', $og_type );
         // Set og:type meta tag.
-        $metadata_arr[] = '<meta property="og:type" content="' . esc_attr( $og_type ) . '" />';
+        $metadata_arr['og:type'] = '<meta property="og:type" content="' . esc_attr( $og_type ) . '" />';
 
         // Title
         // Note: Contains multipage information
         $metadata_arr['og:title'] = '<meta property="og:title" content="' . esc_attr( amt_get_title_for_metadata($options, $post) ) . '" />';
         // URL - Uses amt_get_permalink_for_multipage()
-        $metadata_arr[] = '<meta property="og:url" content="' . esc_url_raw( amt_get_permalink_for_multipage($post) ) . '" />';
+        $metadata_arr['og:url'] = '<meta property="og:url" content="' . esc_url_raw( amt_get_permalink_for_multipage($post) ) . '" />';
         // Description - We use the description defined by Add-Meta-Tags
         // Note: Contains multipage information through amt_process_paged()
         $content_desc = amt_get_content_description($post);
         if ( !empty($content_desc) ) {
-            $metadata_arr[] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $content_desc ) ) . '" />';
+            $metadata_arr['og:description'] = '<meta property="og:description" content="' . esc_attr( amt_process_paged( $content_desc ) ) . '" />';
         }
         // Locale
-        $metadata_arr[] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_content($options, $post)) ) . '" />';
+        $metadata_arr['og:locale'] = '<meta property="og:locale" content="' . esc_attr( str_replace('-', '_', amt_get_language_content($options, $post)) ) . '" />';
 
         // og:updated_time
-        $metadata_arr[] = '<meta property="og:updated_time" content="' . esc_attr( amt_iso8601_date($post->post_modified) ) . '" />';
+        $metadata_arr['og:updated_time'] = '<meta property="og:updated_time" content="' . esc_attr( amt_iso8601_date($post->post_modified) ) . '" />';
 
         // Image
 
         // First check if a global image override URL has been entered.
         // If yes, use this image URL and override all other images.
-        $global_image_override_url = amt_get_post_meta_image_url($post->ID);
-        if ( ! empty( $global_image_override_url ) ) {
-            $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $global_image_override_url ) . '" />';
-            if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
-                $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $global_image_override_url ) ) . '" />';
+        $image_data = amt_get_image_data( amt_get_post_meta_image_url($post->ID) );
+        if ( ! empty($image_data) ) {
+            $image_size = apply_filters( 'amt_image_size_content', 'full' );
+            $image_meta_tags = amt_get_opengraph_image_metatags( $options, $image_data, $size=$image_size );
+            if ( ! empty($image_meta_tags) ) {
+                $metadata_arr = array_merge( $metadata_arr, $image_meta_tags );
             }
+        //$global_image_override_url = amt_get_post_meta_image_url($post->ID);
+        //if ( ! empty( $global_image_override_url ) ) {
+        //    $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $global_image_override_url ) . '" />';
+        //    if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
+        //        $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $global_image_override_url ) ) . '" />';
+        //    }
 
         // Further image processing
         } else {
@@ -723,11 +885,22 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
             }
 
             // If no images have been found so far use the default image, if set.
-            if ( $has_images === false && ! empty( $options["default_image_url"] ) ) {
-                $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $options["default_image_url"] ) . '" />';
-                if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
-                    $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $options["default_image_url"] ) ) . '" />';
+            if ( $has_images === false ) {
+
+                // Use the default image, if one has been set.
+                $image_data = amt_get_default_image_data();
+                if ( ! empty($image_data) ) {
+                    $image_size = apply_filters( 'amt_image_size_content', 'full' );
+                    $image_meta_tags = amt_get_opengraph_image_metatags( $options, $image_data, $size=$image_size );
+                    if ( ! empty($image_meta_tags) ) {
+                        $metadata_arr = array_merge( $metadata_arr, $image_meta_tags );
+                    }
                 }
+
+                //$metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $options["default_image_url"] ) . '" />';
+                //if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
+                //    $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $options["default_image_url"] ) ) . '" />';
+                //}
             }
 
         }
@@ -746,26 +919,27 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
         if ( $og_type == 'article' ) {
 
             // Dates
-            $metadata_arr[] = '<meta property="article:published_time" content="' . esc_attr( amt_iso8601_date($post->post_date) ) . '" />';
-            $metadata_arr[] = '<meta property="article:modified_time" content="' . esc_attr( amt_iso8601_date($post->post_modified) ) . '" />';
+            $metadata_arr['article:published_time'] = '<meta property="article:published_time" content="' . esc_attr( amt_iso8601_date($post->post_date) ) . '" />';
+            $metadata_arr['article:modified_time'] = '<meta property="article:modified_time" content="' . esc_attr( amt_iso8601_date($post->post_modified) ) . '" />';
 
             // Author
             // If a Facebook author profile URL has been provided, it has priority,
             // Otherwise fall back to the WordPress author archive.
             $fb_author_url = get_the_author_meta('amt_facebook_author_profile_url', $post->post_author);
             if ( !empty($fb_author_url) ) {
-                $metadata_arr[] = '<meta property="article:author" content="' . esc_url_raw( $fb_author_url, array('http', 'https', 'mailto') ) . '" />';
+                $metadata_arr['article:author'] = '<meta property="article:author" content="' . esc_url_raw( $fb_author_url, array('http', 'https', 'mailto') ) . '" />';
             } else {
-                $metadata_arr[] = '<meta property="article:author" content="' . esc_url_raw( get_author_posts_url( get_the_author_meta( 'ID', $post->post_author ) ) ) . '" />';
+                //$metadata_arr['article:author'] = '<meta property="article:author" content="' . esc_url_raw( get_author_posts_url( get_the_author_meta( 'ID', $post->post_author ) ) ) . '" />';
+                $metadata_arr['article:author'] = '<meta property="article:author" content="' . esc_url_raw( amt_get_local_author_profile_url( get_the_author_meta( 'ID', $post->post_author ), $options ) ) . '" />';
             }
 
             // Publisher
             // If a Facebook publisher profile URL has been provided, it has priority.
             // Otherwise fall back to the WordPress blog home url.
             if ( ! empty($options['social_main_facebook_publisher_profile_url']) ) {
-                $metadata_arr[] = '<meta property="article:publisher" content="' . esc_url_raw( $options['social_main_facebook_publisher_profile_url'], array('http', 'https', 'mailto') ) . '" />';
+                $metadata_arr['article:publisher'] = '<meta property="article:publisher" content="' . esc_url_raw( $options['social_main_facebook_publisher_profile_url'], array('http', 'https', 'mailto') ) . '" />';
             } else {
-                $metadata_arr[] = '<meta property="article:publisher" content="' . esc_url_raw( trailingslashit( get_bloginfo('url') ) ) . '" />';
+                $metadata_arr['article:publisher'] = '<meta property="article:publisher" content="' . esc_url_raw( trailingslashit( get_bloginfo('url') ) ) . '" />';
             }
 
             /*
@@ -834,28 +1008,85 @@ function amt_add_opengraph_metadata_head( $post, $attachments, $embedded_media, 
 }
 
 
-/**
- * Return an array of Opengraph metatags for an image attachment with the
- * provided post ID.
- * By default, returns metadata for the 'medium' sized version of the image.
- */
-function amt_get_opengraph_image_metatags( $options, $post_id, $size='medium' ) {
+//
+// Return an array of Opengraph metatags for an image attachment with the
+// provided post ID.
+// By default, returns metadata for the 'medium' sized version of the image.
+//
+function amt_get_opengraph_image_metatags( $options, $image_data, $size='medium' ) {
+    //
+    // $image_data can be:
+    //
+    // 1. An array with the following data:
+    //
+    //    'id'    => null,   // post ID of attachment
+    //    'url'   => null,
+    //    'width' => null,
+    //    'height' => null,
+    //    'type'  => null,
+    //
+    // 2. An attachment ID (integer)
+    //
     $metadata_arr = array();
-    $image = get_post( $post_id );
+    $image_id = null;
+
+    if ( is_array($image_data) && ! is_null($image_data['url']) ) {
+        // Here we process the image data as retrieved from the special notation of the image's URL.
+        // No size information is taken into account in this case.
+        // Image tags
+        $metadata_arr[] = '<meta property="og:image" content="' . esc_url( $image_data['url'] ) . '" />';
+        if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
+            $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url( str_replace('http:', 'https:', $image_data['url']) ) . '" />';
+        }
+        if ( apply_filters( 'amt_extended_image_tags', true ) ) {
+            if ( ! is_null($image_data['width']) ) {
+                $metadata_arr[] = '<meta property="og:image:width" content="' . esc_attr( $image_data['width'] ) . '" />';
+            }
+            if ( ! is_null($image_data['height']) ) {
+                $metadata_arr[] = '<meta property="og:image:height" content="' . esc_attr( $image_data['height'] ) . '" />';
+            }
+            if ( ! is_null($image_data['type']) ) {
+                $metadata_arr[] = '<meta property="og:image:type" content="' . esc_attr( $image_data['type'] ) . '" />';
+            }
+        }
+
+        return $metadata_arr;
+
+    } elseif ( is_array($image_data) && is_numeric($image_data['id']) ) {
+        // The attachment ID exists in the array's 'id' item.
+        $image_id = absint( $image_data['id'] );
+    } elseif ( is_numeric($image_data) ) {
+        // Image data is the attachment ID (integer)
+        $image_id = absint( $image_data );
+    }
+
+    if ( empty($image_id) ) {
+        return $metadata_arr;
+    }
+
+    // Process the image attachment and generate meta tags.
+
+    //$image = get_post( $image_id );
     //$image_meta = wp_get_attachment_metadata( $image->ID );   // contains info about all sizes
     // We use wp_get_attachment_image_src() since it constructs the URLs
     //$thumbnail_meta = wp_get_attachment_image_src( $image->ID, 'thumbnail' );
-    $main_size_meta = wp_get_attachment_image_src( $image->ID, $size );
+    $main_size_meta = wp_get_attachment_image_src( $image_id, $size );
+    // Check if we have image data. $main_size_meta is false on error.
+    if ( $main_size_meta === false ) {
+        return $metadata_arr;
+    }
+
     // Image tags
-    $metadata_arr[] = '<meta property="og:image" content="' . esc_url_raw( $main_size_meta[0] ) . '" />';
+    $metadata_arr[] = '<meta property="og:image" content="' . esc_url( $main_size_meta[0] ) . '" />';
     if ( is_ssl() || ( ! is_ssl() && $options["has_https_access"] == "1" ) ) {
-        $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url_raw( str_replace('http:', 'https:', $main_size_meta[0]) ) . '" />';
+        $metadata_arr[] = '<meta property="og:image:secure_url" content="' . esc_url( str_replace('http:', 'https:', $main_size_meta[0]) ) . '" />';
     }
     if ( apply_filters( 'amt_extended_image_tags', true ) ) {
         $metadata_arr[] = '<meta property="og:image:width" content="' . esc_attr( $main_size_meta[1] ) . '" />';
         $metadata_arr[] = '<meta property="og:image:height" content="' . esc_attr( $main_size_meta[2] ) . '" />';
-        $metadata_arr[] = '<meta property="og:image:type" content="' . esc_attr( get_post_mime_type( $image->ID ) ) . '" />';
+        $metadata_arr[] = '<meta property="og:image:type" content="' . esc_attr( get_post_mime_type( $image_id ) ) . '" />';
     }
+
     return $metadata_arr;
 }
 

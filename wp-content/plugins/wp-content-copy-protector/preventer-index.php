@@ -3,7 +3,7 @@
 Plugin Name: WP Content Copy Protection & No Right Click
 Plugin URI: http://wordpress.org/plugins/wp-content-copy-protector/
 Description: This wp plugin protect the posts content from being copied by any other web site author , you dont want your content to spread without your permission!!
-Version: 1.5.0.3
+Version: 1.5.0.5
 Author: wp-buy
 Author URI: http://www.wp-buy.com/
 */
@@ -117,14 +117,19 @@ function disableEnterKey(e)
 function disable_copy(e)
 {	
 	var elemtype = e.target.nodeName;
+	var isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
 	elemtype = elemtype.toUpperCase();
 	var checker_IMG = '<?php echo $wccp_settings['img'];?>';
 	if (elemtype == "IMG" && checker_IMG == 'checked' && e.detail >= 2) {show_wpcp_message(alertMsg_IMG);return false;}
     if (elemtype != "TEXT" && elemtype != "TEXTAREA" && elemtype != "INPUT" && elemtype != "PASSWORD" && elemtype != "SELECT")
 	{
-		if (smessage !== "" && e.detail >= 2)
+		if (smessage !== "" && e.detail == 2)
 			show_wpcp_message(smessage);
-		return false;
+		
+		if (isSafari)
+			return true;
+		else
+			return false;
 	}	
 }
 function disable_copy_ie()
@@ -254,28 +259,31 @@ function alert_message()
 function wccp_css_script()
 {
 ?>
-			<style>
-			.unselectable
-			{
-		    -moz-user-select:none;
-		    -webkit-user-select:none;
-    		cursor: default;
-			}
-			html
-			{
-			-webkit-touch-callout: none;
-			-webkit-user-select: none;
-			-khtml-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
-			-webkit-tap-highlight-color: rgba(0,0,0,0);
-			}
-			</style>
-			<script id="wpcp_css_disable_selection" type="text/javascript">
-			var e = document.getElementsByTagName('body')[0];
-			e.setAttribute('unselectable',on);
-			</script>
+<style>
+.unselectable
+{
+-moz-user-select:none;
+-webkit-user-select:none;
+cursor: default;
+}
+html
+{
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+</style>
+<script id="wpcp_css_disable_selection" type="text/javascript">
+var e = document.getElementsByTagName('body')[0];
+if(e)
+{
+	e.setAttribute('unselectable',on);
+}
+</script>
 <?php
 }
 //------------------------------------------------------------------------
@@ -345,6 +353,42 @@ function right_click_premium_settings()
 	}
 }
 //------------------------------------------------------------------------
+function wccp_find_image_urls( $content ) {
+	
+	global $wccp_settings;
+	
+	$remove_img_urls = "Yes";
+	
+	if($remove_img_urls == "Yes"){
+
+	$regexp = '(href=\"http)(.*)(.jpg|.jpeg|.png)';
+
+	if(preg_match_all("/$regexp/iU", $content, $matches, PREG_SET_ORDER)) {
+
+		if( !empty($matches) ) {
+
+			$srcUrl = get_permalink();
+
+			for ($i=0; $i <= count($matches); $i++)
+			{
+				if (isset($matches[$i]) && isset($matches[$i][0]))
+
+					$tag = $matches[$i][0];
+
+				else
+
+					$tag = '';
+
+				$tag2 = '';
+
+				$content = str_replace($tag,$tag2,$content);
+			}
+		}
+	}
+	}
+	return '<div class="protcted_area">'.$content.'</div>';
+}
+//------------------------------------------------------------------------
 // Add specific CSS class by filter
 function wccp_class_names($classes) {
 global  $wccp_settings;
@@ -372,6 +416,7 @@ add_action('wp_head','right_click_premium_settings');
 add_action('wp_head','wccp_css_settings');
 add_action('wp_footer','alert_message');
 add_filter('body_class','wccp_class_names');
+//add_filter( 'the_content', 'wccp_find_image_urls');
 //-------------------------------------------------------Function to read options from the database
 function wccp_read_options()
 {
@@ -447,19 +492,25 @@ function wccp_options_page_pro() {
 //------------------------------------------------------------------------
 //Make a WordPress function to add to the correct menu.
 function wpccp_after_plugin_row( $plugin_file, $plugin_data, $status ) {
-	$class_name = $plugin_data['slug'];
-	$p_url = "http://www.wp-buy.com/product/wp-content-copy-protection-pro/";
-	echo '<tr id="' .$class_name. '-plugin-update-tr" class="plugin-update-tr active">';
-	echo '<th class="check-column" scope="row"></th>';
-	echo '<td colspan="3" class="plugin-update">';
-	echo '<div class="update-message" style="background:#FFFF99;margin-left:1px;" >';
-	echo 'You are running WP Content Copy Protection & No Right Click (free). To get more features, you can <a href="' .$p_url. '" target="_blank"><strong>Upgrade Now</strong></a>.';
-	echo '</div>';
-	echo '</td>';
-	echo '</tr>';
+	$plugin_name = substr(__FILE__, strlen(ABSPATH . PLUGINDIR . '/'));
+	if ($plugin_file != $plugin_name) return;
+	$FS_PATH = plugin_basename( __FILE__ );
+	if ($FS_PATH)
+	{
+		$class_name = $plugin_data['slug'];
+		$p_url = "http://www.wp-buy.com/product/wp-content-copy-protection-pro/";
+		echo '<tr id="' .$class_name. '-plugin-update-tr" class="plugin-update-tr active">';
+		echo '<th class="check-column" scope="row"></th>';
+		echo '<td colspan="3" class="plugin-update">';
+		echo '<div class="update-message" style="background:#FFFF99;margin-left:1px;" >';
+		echo 'You are running WP Content Copy Protection & No Right Click (free). To get more features, you can <a href="' .$p_url. '" target="_blank"><strong>Upgrade Now</strong></a>.';
+		echo '</div>';
+		echo '</td>';
+		echo '</tr>';
+	}
 }
 $path = plugin_basename( __FILE__ );
-add_action("after_plugin_row_{$path}", wpccp_after_plugin_row, 10, 3 );
+add_action("after_plugin_row_{$path}", "wpccp_after_plugin_row", 10, 3 );
 //------------------------------------------------------------------------
 //Make our function to call the WordPress function to add to the correct menu.
 function wccp_add_options() {

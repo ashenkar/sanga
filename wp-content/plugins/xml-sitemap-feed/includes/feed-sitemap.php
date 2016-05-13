@@ -1,9 +1,11 @@
 <?php
 /**
- * Google News Sitemap Feed Template
+ * XML Sitemap Index Feed Template
  *
  * @package XML Sitemap Feed plugin for WordPress
  */
+
+if ( ! defined( 'WPINC' ) ) die;
 
 status_header('200'); // force header('HTTP/1.1 200 OK') for sites without posts
 header('Content-Type: text/xml; charset=' . get_bloginfo('charset'), true);
@@ -17,7 +19,7 @@ echo '<?xml version="1.0" encoding="'.get_bloginfo('charset').'"?>
 <!-- generator-version="'.XMLSF_VERSION.'" -->
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
+	xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
 		http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd">
 ';
 
@@ -28,44 +30,40 @@ global $xmlsf;
 		<lastmod><?php echo mysql2date('Y-m-d\TH:i:s+00:00', get_lastdate( 'gmt' ), false); ?></lastmod>
 	</sitemap>
 <?php
-// add rules for custom public post types
-foreach ( $xmlsf->have_post_types() as $post_type ) :
+// add rules for public post types
+foreach ( $xmlsf->have_post_types() as $post_type ) {
+	$archive = isset($post_type['archive']) ? $post_type['archive'] : '';
 
-	if (!empty($post_type['archive'])) 
-		$archive = $post_type['archive']; 
-	else 
-		$archive = '';
 	foreach ( $xmlsf->get_archives($post_type['name'],$archive) as $m => $url ) {
 ?>
 	<sitemap>
 		<loc><?php echo $url; ?></loc>
 		<lastmod><?php echo mysql2date('Y-m-d\TH:i:s+00:00', get_lastmodified( 'gmt', $post_type['name'], $m ), false); ?></lastmod>
 	</sitemap>
-<?php 
+<?php
 	}
-endforeach;
+}
 
-	// add rules for custom public post taxonomies
-foreach ( $xmlsf->get_taxonomies() as $taxonomy ) :
-
+// add rules for public taxonomies
+foreach ( $xmlsf->get_taxonomies() as $taxonomy ) {
 	if ( wp_count_terms( $taxonomy, array('hide_empty'=>true) ) > 0 ) {
 ?>
 	<sitemap>
 		<loc><?php echo $xmlsf->get_index_url('taxonomy',$taxonomy); ?></loc>
 	<?php echo $xmlsf->get_lastmod('taxonomy',$taxonomy); ?></sitemap>
-<?php 
+<?php
 	}
-endforeach;
+}
 
 // custom URLs sitemap
 $urls = $xmlsf->get_urls();
-if ( !empty($urls) ) :
+if ( !empty($urls) ) {
 ?>
 	<sitemap>
 		<loc><?php echo $xmlsf->get_index_url('custom'); ?></loc>
 	</sitemap>
-<?php 
-endif;
+<?php
+}
 
 // custom sitemaps
 $custom_sitemaps = $xmlsf->get_custom_sitemaps();
@@ -76,7 +74,8 @@ foreach ($custom_sitemaps as $url) {
 	<sitemap>
 		<loc><?php echo esc_url($url); ?></loc>
 	</sitemap>
-<?php 
+<?php
 }
+
 ?></sitemapindex>
-<?php $xmlsf->_e_usage(); 
+<?php $xmlsf->_e_usage();

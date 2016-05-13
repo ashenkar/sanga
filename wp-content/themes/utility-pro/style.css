@@ -2317,8 +2317,8 @@ float: right;
 	.single-post .content-sidebar-wrap blockquote {
 		padding: 24px 52px;
 		margin-bottom: 24px;
-		margin-left: -20px;
-		margin-right: -20px;
+		margin-left: -12px;
+		margin-right: -12px;
 		background-color: #eaeaea;
 	}
 	
@@ -2346,7 +2346,7 @@ float: right;
 	}
 	
 	.entry-header .entry-meta {
-		margin: 0;
+    margin: 0 12px 0px;
 	}
 	
 	h1, h2 {
@@ -2355,13 +2355,13 @@ float: right;
 	
 	.single .entry-content {
 		font-size: 16px !important;
-		margin: -20px !important;
+		margin: 0px !important;
 		margin-bottom: 10px !important;
 	}
 	
 	.wrap {
 		margin: 0 auto;
-		padding: 0 10px !important;
+		padding: 0 0px !important;
 		max-width: 100%;
 	}
 	
@@ -2434,6 +2434,66 @@ float: right;
 	.page-template-page_custom_archive-php .entry-content h3 {
 		font-size: 20px;
 	}
+	
+	
+	.home-welcome {
+    padding: 0px 0;
+    visibility: hidden;
+    height: 0px;
+}
+
+p#breadcrumbs {
+    font-size: 12px;
+    padding: 0px 12px;
+}
+
+.entry {
+    
+    padding: 12px 12px 0px !important;
+}
+
+.entry-header .entry-meta {
+    margin: 0 12px 0px !important;
+}
+
+.post .entry-footer .entry-meta {
+   
+    margin-left: -12px !important;
+    margin-right: -12px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    
+}
+
+    .yarpp-related {
+    margin-left: -10px !important;
+    margin-right: -10px !important;
+}
+
+.entry-title {
+    margin-bottom: 12px;
+}
+
+.yarpp-related h3 {
+    margin-left: 24px;
+}
+
+.widgettitle {
+    margin-left: 12px;
+}
+.footer-widgets {
+    padding: 12px;
+}
+
+.widget-wrap ul {
+    margin: 12px;
+}
+
+.footer-widgets .widget {
+    margin: 12px;
+}
+
+
 }
 
 /* CUSTOM */

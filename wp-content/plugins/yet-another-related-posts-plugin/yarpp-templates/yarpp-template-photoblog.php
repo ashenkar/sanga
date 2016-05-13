@@ -1,19 +1,19 @@
 <?php
 /*
-YARPP Template: Alexander
-Description: Requires a theme which supports post thumbnails
-Author: Alexander
+YARPP Template: Yet Another Photoblog
+Description: Requires the Yet Another Photoblog plugin
+Author: mitcho (Michael Yoshitaka Erlewine)
 */ ?>
-<h3>Related Posts</h3>
+<h3>Related Photos</h3>
 <?php if (have_posts()):?>
 <ol>
 	<?php while (have_posts()) : the_post(); ?>
-		<?php if (has_post_thumbnail()):?>
-		<li><a href="<?php the_permalink() ?>" rel="bookmark"><?php the_title(); ?></a><a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title_attribute(); ?>"><?php the_post_thumbnail('feature-post-home'); ?></a></li>
-		<?php endif; ?>
+		<?php if (function_exists('yapb_is_photoblog_post')): if (yapb_is_photoblog_post()):?>
+		<li><a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title_attribute(); ?>"><?php yapb_get_thumbnail(); ?></a></li>
+		<?php endif; endif; ?>
 	<?php endwhile; ?>
 </ol>
 
 <?php else: ?>
-<p>No related posts.</p>
+<p>No related photos.</p>
 <?php endif; ?>

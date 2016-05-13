@@ -35,4 +35,13 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click','#aj_enabled',function() {
 		isChecked();
 	});
+	
+	jQuery(document).on('click','.aj-upgrade-notice',function() {
+	    jQuery.ajax({
+	        url: aj.ajaxurl,
+	        data: {
+	            action: 'async_javascript_dismiss_upgrade'
+	        }
+	    });
+	});
 });

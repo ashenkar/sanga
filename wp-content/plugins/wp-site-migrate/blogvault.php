@@ -5,7 +5,7 @@ Plugin URI: http://wpengine.com
 Description: The easiest way to migrate your site to WP Engine
 Author: WP Engine
 Author URI: http://blogvault.net/
-Version: 1.20
+Version: 1.22
 Network: True
  */
 
@@ -29,7 +29,7 @@ Network: True
 global $bvVersion;
 global $blogvault;
 global $bvDynamicEvents;
-$bvVersion = '1.20';
+$bvVersion = '1.22';
 
 if (is_admin())
 	require_once dirname( __FILE__ ) . '/admin.php';
@@ -59,7 +59,9 @@ if ( !function_exists('bvActivateHandler') ) :
 		if (!wp_next_scheduled('bvdailyping_daily_event')) {
 			wp_schedule_event(time(), 'daily', 'bvdailyping_daily_event');
 		}
-		##BVKEYSLOCATE##
+		if (!isset($_REQUEST['blogvaultkey'])) {
+			##BVKEYSLOCATE##
+		}
 		if ($blogvault->getOption('bvPublic') !== false) {
 			$blogvault->updateOption('bvLastSendTime', time());
 			$blogvault->updateOption('bvLastRecvTime', 0);

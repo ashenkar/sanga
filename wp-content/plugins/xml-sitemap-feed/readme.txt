@@ -1,34 +1,34 @@
 === XML Sitemap & Google News feeds ===
 Contributors: RavanH
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed&item_number=3%2e8&no_shipping=0&tax=0&bn=PP%2dDonationsBF&charset=UTF%2d8&lc=us
-Tags: sitemap, xml sitemap, news sitemap, sitemap.xml, robots.txt, Google, Google News, Yahoo, Bing, , Yandex, Baidu, seo, feed, polylang, image sitemap
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed
+Tags: sitemap, xml sitemap, news sitemap, sitemap.xml, robots.txt, Google, Google News, Yahoo, Bing, , Yandex, Baidu, seo, feed, Polylang, WPML, image sitemap
 Requires at least: 3.2
-Tested up to: 4.2
-Stable tag: 4.4.1
+Tested up to: 4.5
+Stable tag: 4.7.1
 
-XML and Google News Sitemaps to feed the hungry spiders. Multisite, WP Super Cache and Polylang compatible.
+XML and Google News Sitemaps to feed the hungry spiders. Multisite, WP Super Cache, Polylang and WPML compatible.
 
 == Description ==
 
-This plugin dynamically creates feeds that comply with the **XML Sitemap** and the **Google News Sitemap** protocol. **Multisite** and **Polylang** compatible and there are no files created. Options can be found on **Settings > Reading** to control which sitemaps, which post and taxonomy types are included, how priority is calculated, who to ping and set additional robots.txt rules. 
+This plugin dynamically creates feeds that comply with the **XML Sitemap** and the **Google News Sitemap** protocol. **Multisite**, **Polylang** and **WPML** compatible and there are no files created. Options can be found on **Settings > Reading** to control which sitemaps, which post and taxonomy types are included, how priority is calculated, who to ping and set additional robots.txt rules.
 
 The main advantage of this plugin over other XML Sitemap plugins is **simplicity**. No need to change file or folder permissions, move files or spend time tweaking difficult plugin options.
 
 You, or site owners on your Multisite network, will not be bothered with overly complicated settings like most other XML Sitemap plugins. The default settings will suffice in most cases and XML sitemap values like ChangeFreq and URL Priority are auto-calculated based on post age and comment activity.
 
-an XML Sitemap Index becomes instantly available on yourblog.url/sitemap.xml (or yourblog.url/?feed=sitemap) containing references to posts and pages by default, ready for indexing by search engines like Google, Bing, Yahoo, AOL and Ask. When the Google News Sitemap is activated, it will become available on yourblog.url/sitemap-news.xml (or yourblog.url/?feed=sitemap-news), ready for indexing by Google News. Both are automatically referenced in the dynamically created **robots.txt** on yourblog.url/robots.txt to tell search engines where to find your XML Sitemaps. Google and Bing can be pinged on each new publication.
+An XML Sitemap Index becomes instantly available on **yourblog.url/sitemap.xml** (or yourblog.url/?feed=sitemap if you're not using a 'fancy' permalink structure) containing references to posts and pages by default, ready for indexing by search engines like Google, Bing, Yahoo, AOL and Ask. When the Google News Sitemap is activated, it will become available on **yourblog.url/sitemap-news.xml** (or yourblog.url/?feed=sitemap-news), ready for indexing by Google News. Both are automatically referenced in the dynamically created **robots.txt** on **yourblog.url/robots.txt** to tell search engines where to find your XML Sitemaps. Google and Bing can be pinged on each new publication.
 
 Please read the FAQ's for info on how to get your articles listed on Google News.
 
 **Compatible with caching plugins** like WP Super Cache, W3 Total Cache and Quick Cache that cache feeds, allowing a faster serving to the impatient (when hungry) spider.
 
-**NOTES:** 
+**NOTES:**
 
 1. If you _do not use fancy URL's_ or you have WordPress installed in a _subdirectory_, a dynamic **robots.txt will NOT be generated**. You'll have to create your own and upload it to your site root! See FAQ's.
 
 2. On large sites, it is advised to use a good caching plugin like **WP Super Cache**, **Quick Cache** or **W3 Total Cache** to improve your site _and_ sitemap performance.
 
-= Features = 
+= Features =
 
 **XML Sitemap**
 
@@ -36,7 +36,7 @@ Please read the FAQ's for info on how to get your articles listed on Google News
 * Sitemap with custom URLs optional.
 * Custom/static sitemaps can be added to the index.
 * Completely **automatic** post URL _priority_ and _change frequency_ calculation based on post age and comment and trackback activity.
-* Works out-of-the-box, even on **Multisite** installations. 
+* Works out-of-the-box, even on **Multisite** installations.
 * Optionally include Image tags with caption and title for featured images or attached images.
 * Pings Google, Bing & Yahoo, Yandex and Baidu on new post publication.
 * Options to define which post types and taxonomies get included in the sitemap and automatic priority calculation rules.
@@ -50,9 +50,9 @@ Please read the FAQ's for info on how to get your articles listed on Google News
 * Configure <access>, <genres> and <keywords> tags both globally and post by post
 * Pings Google on new publications.
 
-** More **
+**More**
 
-* Compatible with multi-lingual sites using **Polylang** to allow all languages to be indexed equally.
+* Compatible with multi-lingual sites using **Polylang** or **WPML** to allow all languages to be indexed equally.
 * Option to add new robots.txt rules. These can be used to further control (read: limit) the indexation of various parts of your site and subsequent spread of pagerank accross your sites pages.
 * Includes XLS stylesheets for human readable sitemaps.
 
@@ -62,9 +62,10 @@ Please read the FAQ's for info on how to get your articles listed on Google News
 - **French** * R.A. van Hagen http://status301.net (version 4.2) (improved translation or suggestions needed!)
 - **Indonesian** * Nasrulhaq Muiz http://al-badar.net/ (version 4.2)
 - **Italian** * Raffaello Tesi http://www.raffaellotesi.com  (version 4.3.2)
-- **Serbian** * WPdiscounts http://wpdiscounts.com/ (version 4.1) 
+- **Japanese** * gblsm https://profiles.wordpress.org/gblsm/ (version 4.6)
+- **Serbian** * WPdiscounts http://wpdiscounts.com/ (version 4.1)
 - **Spanish** * Andrew Kurtis - WebHostingHub Support http://www.webhostinghub.com/ (version 4.3.2)
-- **Ukrainian** * Cmd Software http://www.cmd-soft.com/ (version 4.0) 
+- **Ukrainian** * Cmd Software http://www.cmd-soft.com/ (version 4.0)
 
 New transtations will be accepted and listed here. See translation instructions under [Other Notes](http://wordpress.org/plugins/xml-sitemap-feed/other_notes/).
 
@@ -133,7 +134,7 @@ Yes. You can find default settings for priority, changefreq and lastmod on **Set
 
 = Do I need to submit the sitemap to search engines? =
 
-No. In normal circumstances, your site will be indexed by the major search engines before you know it. The search engines will be looking for a robots.txt file and (with this plugin activated) find a pointer in it to the XML Sitemap on your blog. The search engines will return on a regular basis to see if your site has updates. 
+No. In normal circumstances, your site will be indexed by the major search engines before you know it. The search engines will be looking for a robots.txt file and (with this plugin activated) find a pointer in it to the XML Sitemap on your blog. The search engines will return on a regular basis to see if your site has updates.
 
 Besides that, Google and Bing are pinged upon each new publication.
 
@@ -147,7 +148,7 @@ Yes, Google and Bing are pinged upon each new publication. Unless you disable th
 
 That depends. In normal circumstances, if you have no physical robots.txt file in your site root, the new sitemap url will be automatically added to the dynamic robots.txt that is generated by WordPress. But in some cases this might not be the case.
 
-If you use a static robots.txt file in your website root, you will need to open it in a text editor. If there is already a line with `Sitemap: http://yourblogurl.tld/sitemap.xml` you can just leave it like it is. But if there is no sitemap referrence there, add it (adapted to your site url) to make search engines find your XML Sitemap. 
+If you use a static robots.txt file in your website root, you will need to open it in a text editor. If there is already a line with `Sitemap: http://yourblogurl.tld/sitemap.xml` you can just leave it like it is. But if there is no sitemap referrence there, add it (adapted to your site url) to make search engines find your XML Sitemap.
 
 Or if you have WP installed in a subdirectory, on a server without rewrite_rules or if you do not use fancy URLs in your Permalink structure settings. In these cases, WordPress will need a little help in getting ready for XML Sitemap indexing. Read on in the **WordPress** section for more.
 
@@ -156,15 +157,15 @@ Or if you have WP installed in a subdirectory, on a server without rewrite_rules
 That depends on where the index.php and .htaccess of your installation reside. If they are in the root while the rest of the WP files are installed in a subdir, so the site is accessible from your domain root, you do not have to do anything. It should work out of the box. But if the index.php is together with your wp-config.php and all other WP files in a subdir, meaning your blog is only accessible via that subdir, you need to manage your own robots.txt file in your **domain root**. It _has_ to be in the root (!) and needs a line starting with `Sitemap:` followed by the full URL to the sitemap feed provided by XML Sitemap Feed plugin. Like:
 `
 Sitemap: http://yourblogurl.tld/subdir/sitemap.xml
-` 
+`
 
 If you already have a robots.txt file with another Sitemap reference like it, just add the full line below or above it.
 
 = Do I need to use a fancy Permalink structure? =
 
-No. While I would advise you to use any one of the nicer Permalink structures for better indexing, you might not be able to (or don't want to) do that. If so, you can still use this plugin: 
+No. While I would advise you to use any one of the nicer Permalink structures for better indexing, you might not be able to (or don't want to) do that. If so, you can still use this plugin:
 
-Check to see if the URL yourblog.url/?feed=sitemap does produce a feed. Now manually upload your own robots.txt file to your website root containing: 
+Check to see if the URL yourblog.url/?feed=sitemap does produce a feed. Now manually upload your own robots.txt file to your website root containing:
 `
 Sitemap: http://yourblog.url/?feed=sitemap
 
@@ -197,20 +198,20 @@ If that's not the case, you are probably using a caching plugin or your browser 
 
 = I use a caching plugin but the sitemap is not cached =
 
-Some caching plugins have the option to switch on/off caching of feeds. Make sure it is turned on. 
+Some caching plugins have the option to switch on/off caching of feeds. Make sure it is turned on.
 
 Frederick Townes, developer of **W3 Total Cache**, says: "There's a checkbox option on the page cache settings tab to cache feeds. They will expire according to the expires field value on the browser cache setting for HTML."
 
 The Google News sitemap is designed to NOT be cached.
 
-= I get an ERROR when opening the sitemap or robots.txt! = 
+= I get an ERROR when opening the sitemap or robots.txt! =
 
 The absolute first thing you need to check is your blogs privacy settings. Go to **Settings > Privacy** and make sure you are **allowing search engines to index your site**. If they are blocked, your sitemap will _not_ be available.
 
 Then, you might want to make sure that there is at least ONE post published. WordPress is known to send 404 status headers with feed requests when there are NO posts. Even though the plugin tries to prevent that, in some cases the wrong status header will get sent anyway and Google Webmaster Tools will report a vague message like:
 
-    We encountered an error while trying to access your Sitemap. 
-    Please ensure your Sitemap follows our guidelines and can be 
+    We encountered an error while trying to access your Sitemap.
+    Please ensure your Sitemap follows our guidelines and can be
     accessed at the location you provided and then resubmit.
 
 If that did not solve the issue, check the following errors that might be encountered along with their respective solutions:
@@ -221,16 +222,16 @@ Try to refresh the Permalink structure in WordPress. Go to Settings > Permalinks
 
 **404 page instead of both sitemap.xml and robots.txt**
 
-There are plugins like Event Calendar (at least v.3.2.beta2) known to mess with rewrite rules, causing problems with WordPress internal feeds and robots.txt generation and thus conflict with the XML Sitemap Feed plugin. Deactivate all plugins and see if you get a basic robots.txt file showing: 
+There are plugins like Event Calendar (at least v.3.2.beta2) known to mess with rewrite rules, causing problems with WordPress internal feeds and robots.txt generation and thus conflict with the XML Sitemap Feed plugin. Deactivate all plugins and see if you get a basic robots.txt file showing:
 `
 User-agent: *
 Disallow:
 `
-Reactivate your plugins one by one to find out which one is causing the problem. Then report the bug to the plugin developer. 
+Reactivate your plugins one by one to find out which one is causing the problem. Then report the bug to the plugin developer.
 
 **404 page instead of robots.txt while sitemap.xml works fine**
 
-There is a know issue with WordPress (at least up to 2.8) not generating a robots.txt when there are _no posts_ with _published_ status. If you use WordPress as a CMS with only _pages_, this will affect you. 
+There is a know issue with WordPress (at least up to 2.8) not generating a robots.txt when there are _no posts_ with _published_ status. If you use WordPress as a CMS with only _pages_, this will affect you.
 
 To get around this, you might either at least write one post and give it _Private_ status or alternatively create your own robots.txt file containing:
 `
@@ -243,7 +244,7 @@ and upload it to your web root...
 
 **Error loading stylesheet: An unknown error has occurred**
 
-On some setups (usually using the WordPress MU Domain Mapping plugin) this error occurs. The problem is known, the cause is not... Until I find out why this is happening, please take comfort in knowing that this only affects reading the sitemap in normal browsers but will NOT affect any spidering/indexing on your site. The sitemap is still readable by all search engines! 
+On some setups (usually using the WordPress MU Domain Mapping plugin) this error occurs. The problem is known, the cause is not... Until I find out why this is happening, please take comfort in knowing that this only affects reading the sitemap in normal browsers but will NOT affect any spidering/indexing on your site. The sitemap is still readable by all search engines!
 
 **XML declaration allowed only at the start of the document**
 
@@ -259,7 +260,7 @@ A. If you see strange output in the first few lines (head tags) of the source, t
 
 B. If the source is empty or incomplete then you're probably experiencing an issue with your servers PHP memory limit. In those cases, you should see a messages like `PHP Fatal error: Allowed memory size of xxxxxx bytes exhausted.` in your server/account error log file.
 
-This can happen on large sites. To avoid these issues, there is an option to split posts over different sitemaps on Settings > Reading. Try different settings, each time revisiting the main sitemap index file and open different sitemaps listed there to check. 
+This can happen on large sites. To avoid these issues, there is an option to split posts over different sitemaps on Settings > Reading. Try different settings, each time revisiting the main sitemap index file and open different sitemaps listed there to check.
 
 Read more on [Increasing memory allocated to PHP](http://codex.wordpress.org/Editing_wp-config.php#Increasing_memory_allocated_to_PHP) (try a value higher than 256M) or ask your hosting provider what you can do.
 
@@ -273,7 +274,7 @@ Yes. In fact, it has been designed for it. Tested on WPMU 2.9.2 and WPMS 3+ both
 1. Install PoEdit on your computer.
 1. Go to this plugins /languages/ directory.
 1. If there is no .po file that corresponds with your language yet, rename the template translation database xml-sitemap-feed-xx_XX.po by replacing the xx with your language code and XX with your country code.
-1. Open the .po file of your language with PoEdit. 
+1. Open the .po file of your language with PoEdit.
 1. Go to Edit > Preferences and on the tab Editor check the option to compile a .mo database on save automatically. Close with OK.
 1. Go to Catalog > Settings and set your name, e-mail address, language and country. Close with OK.
 1. Go to Catalog > Update from POT-file and select the main xml-sitemap-feed.pot file. Then accept all new and removed translation strings with OK.
@@ -287,17 +288,52 @@ Thanks for sharing your translation :)
 
 == Screenshots ==
 
-1. XML Sitemap feed viewed in a normal browser. For human eyes only ;)
+1. XML Sitemap feed viewed in a normal browser. For your eyes only ;)
 2. XML Sitemap source as read by search engines.
 
 
 == Upgrade Notice ==
 
-= 4.4.1 =
-Multiple default genres, several bugfixes, dropping Google News old geolocation tag plus XMLSF_POST_TYPE and XMLSF_NEWS_POST_TYPE.
-
+= 4.7.1 =
+WPML and PHP 5.3 compatibility.
 
 == Changelog ==
+
+= 4.7.1 =
+* PHP 5.3 compatibility fix
+
+= 4.7 =
+* WPML compatibility
+* FIX: News Sitemap chinese language tag
+* FIX: flush rules on plugin re-activation
+
+= 4.6.3 =
+* NEW: filter xmlsf_custom_sitemaps
+* BUGFIX: empty custom urls sitemap
+
+= 4.6.2 =
+* NEW: filter xmlsf_custom_urls
+* More cleanup
+* BUGFIX: broken Polylang compatibility reported by @zesseb
+
+= 4.6.1 =
+* Code cleanup
+* POT file update
+* Dutch translation update
+
+= 4.6 =
+* NEW: xmlsf_news_tags_after action hook
+* Attempt to remove static sitemap files left over by other sitemap plugins
+
+= 4.5.1 =
+* fix Persistent/Stored XSS vulnerability on admin page, thanks to Sneha Rajguru @Sneharajguru
+
+= 4.5 =
+* Set Google News access tag per post
+* Exclude posts from Google News sitemap
+* News Sitemap stylesheet text/links update
+* FIX: delete cached key as suggested by Jeremy Clarke https://wordpress.org/support/topic/please-stop-running-wp_cache_flush-whenever-posts-are-edited
+* NEW: Nginx Helper compatibility to purge cache sitemap URLs from FastCGI Cache or Redis
 
 = 4.4.1 =
 * BUGFIX contribution by alejandra.aranibar: multiple news post types makes get_lastdate return oldest instead of newest date
@@ -314,7 +350,7 @@ Multiple default genres, several bugfixes, dropping Google News old geolocation 
 * Optionally limit posts to certain categories in News Sitemap
 * Noindex response header for sitemaps to keep them out of search results
 * Static sitemap stylesheets
-* Controversial default robots.txt rules removed 
+* Controversial default robots.txt rules removed
 * DB query streamlining
 * BUGFIX: fatal error on . (dot) as category base in permalinks
 * BIGFIX: PHP Strict notices
@@ -347,14 +383,14 @@ Multiple default genres, several bugfixes, dropping Google News old geolocation 
 * Rearranged settings section
 * FIX: replace permalink, title and bloginfo rss filter hooks with own
 
-= 4.2.3 = 
+= 4.2.3 =
 * BUGFIX: Empty ping options after disabling the main sitemap
 * BUGFIX: Empty language tag for Google News tags in posts sitemap
 * Small back end changes
 * NEW: Custom post types split by year/month
 
 = 4.2 =
-* NEW: Image & News tags 
+* NEW: Image & News tags
 * NEW: Exclude pages/posts
 
 = 4.1.4 =
@@ -367,7 +403,7 @@ Multiple default genres, several bugfixes, dropping Google News old geolocation 
 = 4.1 =
 * NEW: Ping Google and Bing on new publications
 * NEW: Set priority per post
-* NEW: Priority calculation options 
+* NEW: Priority calculation options
 * NEW: Option to split posts by year or month for faster generation of each sitemap
 * Reduced queries to increase performance
 * Improved Lastmod and Changefreq calculations
@@ -414,7 +450,7 @@ Multiple default genres, several bugfixes, dropping Google News old geolocation 
 = 3.8.5 =
 * **xLanguage support** based on code and testing by **Daniele Pelagatti**
 * new FILTER HOOK `robotstxt_sitemap_url` for any translate and url changing plugins.
-* BUGFIX: Decimal separator cannot be a comma! 
+* BUGFIX: Decimal separator cannot be a comma!
 
 = 3.8.3 =
 * filter out external URLs inserted by plugins like Page Links To (thanks, Francois)
@@ -466,7 +502,7 @@ Multiple default genres, several bugfixes, dropping Google News old geolocation 
 
 = 2.0 =
 * priority calculation based on comments and age
-* changefreq based on comments 
+* changefreq based on comments
 
 = 1.0 =
 * changed feed template location to avoid the need to relocate files outside the plugins folder

@@ -116,7 +116,8 @@ if ( !function_exists('bvWpEMigrate') ) :
 <?php if ($_error == "email") {
 	echo '<div class="error" style="padding-bottom:0.5%;"><p>There is already an account with this email.</p></div>';
 } else if ($_error == "blog") {
-	echo '<div class="error" style="padding-bottom:0.5%;"><p>Could not create an account. Please contact <a href="http://blogvault.net/contact/">blogVault Support</a></p></div>';
+	echo '<div class="error" style="padding-bottom:0.5%;"><p>Could not create an account. Please contact <a href="http://blogvault.net/contact/">blogVault Support</a><br />
+		<font color="red">NOTE: We do not support automated migration of locally hosted sites.</font></p></div>';
 } else if (($_error == "custom") && isset($_REQUEST['bvnonce']) && wp_verify_nonce($_REQUEST['bvnonce'], "bvnonce")) {
 	echo '<div class="error" style="padding-bottom:0.5%;"><p>'.base64_decode($_REQUEST['message']).'</p></div>';
 }
@@ -131,6 +132,8 @@ if ( !function_exists('bvWpEMigrate') ) :
 				<input type='hidden' name='serverip' value='<?php echo $_SERVER["SERVER_ADDR"] ?>'>
 				<input type='hidden' name='adminurl' value='<?php echo bvWPEAdminUrl(); ?>'>
 				<input type="hidden" name="multisite" value="<?php var_export($blogvault->isMultisite()); ?>" />
+				<input type="hidden" name="dbsig" value="<?php echo $blogvault->dbsig(); ?>" />
+				<input type="hidden" name="serversig" value="<?php echo $blogvault->serversig(); ?>" />
 				<div class="row">
 						<div class="six columns">
 								<label id='label_email'>Email</label>
@@ -144,7 +147,7 @@ if ( !function_exists('bvWpEMigrate') ) :
 				</div>
 				<div class="row">
 					<div class="six columns">
-								<label class="control-label" for="inputip"> SFTP Host </label>
+								<label class="control-label" for="inputip"> SFTP Host/Server Address </label>
 								<input type="text" class="u-full-width" placeholder="ex. 123.456.789.101" name="address">
 								<p class="help-block"></p>
 					</div>
@@ -167,7 +170,7 @@ if ( !function_exists('bvWpEMigrate') ) :
 							that the migration plugin can access all of your site.
 							</p>
 
-								<button name="password-protected" id="advanced-options-toggle" class="button" onclick="javascript; return false">My sites is password protected</button>
+								<button name="password-protected" id="advanced-options-toggle" class="button" onclick="javascript; return false">My site is password protected</button>
 
 							<div id="password-auth" style="display:none">
 								<div id="source-auth" class="six columns">

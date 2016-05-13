@@ -1,9 +1,9 @@
 === Featured Images in RSS w/ Size and Position ===
-Contributors: downtownrob
+Contributors: presswizards
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4SE22RQ4CB2E
 Tags: featured image, rss, rss feed, featured images, thumbnails
 Requires at least: 2.9
-Tested up to: 4.1
+Tested up to: 4.4
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -14,13 +14,13 @@ Adds featured images from posts to your site's RSS feed output, with image size 
 
 A simple way to add featured images in your site's RSS feed, with easy size and positioning options, and now supports custom sizes as well.
 
-Works great with Feedburner, Chimpfeedr, and Mailchimp's RSS-to-Email campaigns, with the featured images added to the left or centered above the text, or to the left or right of the text with word wrap, and with thumbnail, medium, large, full, or custom sizes. It's WordPress Multisite compatible, simply Network Activate to add featured images to all your site's RSS feeds, with each site having it's own size and positioning settings. It defaults to thumbnail sizes with left above text positioning.
+Works great with Feedburner, Chimpfeedr, and Mailchimp's RSS-to-Email campaigns, with the featured images added to the left or centered above the text, or to the left or right of the text with word wrap, and with thumbnail, medium, large, as well as any custom sizes from the active theme. It's WordPress Multisite compatible, simply Network Activate to add featured images to all your site's RSS feeds, with each site having it's own size and positioning settings. It defaults to thumbnail sizes with left above text positioning.
+
+[Donate now](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4SE22RQ4CB2E) to drive development and more features, or just to say thanks. :) Over the years we've received only a handful of small donations, so if this plugin saves you time or made your life easier, please donate to encourage us to continue working on it.
 
 Please submit a [rating and review](http://wordpress.org/support/view/plugin-reviews/featured-images-for-rss-feeds?rate=5#postform), I'd appreciate your feedback.
 
 Wish it did something else as well? Use the [Support](http://wordpress.org/support/plugin/featured-images-for-rss-feeds) tab to submit your thoughts.
-
-If this plugin saved you time, perhaps send a [donation](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4SE22RQ4CB2E) with an amount you feel your time is worth, if you'd like to encourage future development, or just say thanks. :-)
 
 == Installation ==
 
@@ -34,9 +34,11 @@ Or use the old manual upload method:
 
 == Frequently Asked Questions ==
 
-= Are there any FAQs? =
+= Frequent Support Questions =
 
-Not really right now... the use and options are pretty self-explainatory. I'm sure this will change over time. ;) Use the Support tab to submit your questions or concerns please.
+- Note that the alignment CSS is sometimes stripped out depending on the RSS reader/service you're using it with.
+- Mailchimp can require custom CSS for it's templates, there are examples in the support threads.
+- Search the support threads before posting your issue, if possible. There are 2 years worth of questions answered already. :)
 
 == Screenshots ==
 
@@ -47,6 +49,9 @@ Not really right now... the use and options are pretty self-explainatory. I'm su
 Now sets default values upon activation, so it works immediately.
 
 == Changelog ==
+
+= 1.3.7 =
+* Finally updated text to Press Wizards branding (months late), and updated links. Exploring new features for future version, stay tuned! Donate now to help drive development and get the features you want.
 
 = 1.3.6 =
 * Fixed Permissions Denied on Options Page (changing capability from update_core to manage_options worked??). Shout out to @girlgeniuss for the help. Bumped tested up to v3.9.
@@ -79,6 +84,9 @@ Now sets default values upon activation, so it works immediately.
 * First release. Yay. Hi Mom. ;)
 
 == Upgrade Notice ==
+
+= 1.3.7 =
+* Finally updated text to Press Wizards branding (months late), and updated links. Exploring new features for future version, stay tuned! Donate now to help drive development and get the features you want.
 
 = 1.3.6 =
 * Fixed Permissions Denied on Options Page (changing capability from update_core to manage_options worked??). Shout out to @girlgeniuss for the help. Bumped tested up to v3.9.

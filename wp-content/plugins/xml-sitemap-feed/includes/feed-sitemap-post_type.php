@@ -5,6 +5,8 @@
  * @package XML Sitemap Feed plugin for WordPress
  */
 
+if ( ! defined( 'WPINC' ) ) die;
+
 status_header('200'); // force header('HTTP/1.1 200 OK') even for sites without posts
 header('Content-Type: text/xml; charset=' . get_bloginfo('charset'), true);
 header('X-Robots-Tag: noindex, follow', true);
@@ -26,11 +28,11 @@ foreach ( $xmlsf->do_tags($post_type) as $tag => $setting )
 echo !empty($image) ? '
 	xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" ' : '';
 echo '
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
 		http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd';
 echo !empty($image) ? '
-		http://www.google.com/schemas/sitemap-image/1.1 
+		http://www.google.com/schemas/sitemap-image/1.1
 		http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd' : '';
 echo '">
 ';
@@ -38,11 +40,14 @@ echo '">
 // any ID's we need to exclude?
 $excluded = $xmlsf->get_excluded($post_type);
 
+// set empty sitemap flag
+$have_posts = false;
+
 // loop away!
 if ( have_posts() ) :
-    while ( have_posts() ) : 
+    while ( have_posts() ) :
 	the_post();
-	
+
 	// check if page is in the exclusion list (like front page)
 	// or if we are not dealing with an external URL :: Thanks to Francois Deschenes :)
 	// or if post meta says "exclude me please"
@@ -50,22 +55,24 @@ if ( have_posts() ) :
 	if ( !empty($exclude) || !$xmlsf->is_allowed_domain(get_permalink()) || in_array($post->ID, $excluded) )
 		continue;
 
+	$have_posts = true;
+
 	// TODO more image tags & video tags
 	?>
 	<url>
 		<loc><?php echo esc_url( get_permalink() ); ?></loc>
-		<?php echo $xmlsf->get_lastmod(); ?> 
+		<?php echo $xmlsf->get_lastmod(); ?>
 		<changefreq><?php echo $xmlsf->get_changefreq(); ?></changefreq>
 	 	<priority><?php echo $xmlsf->get_priority(); ?></priority>
 <?php
-	if ( !empty($image) && $xmlsf->get_images() ) : 
-		foreach ( $xmlsf->get_images() as $image ) { 
+	if ( !empty($image) && $xmlsf->get_images() ) :
+		foreach ( $xmlsf->get_images() as $image ) {
 			if ( empty($image['loc']) )
 				continue;
 	?>
 		<image:image>
 			<image:loc><?php echo utf8_uri_encode( $image['loc'] ); ?></image:loc>
-<?php 
+<?php
 		if ( !empty($image['title']) ) {
 		?>
 			<image:title><![CDATA[<?php echo str_replace(']]>', ']]&gt;', $image['title']); ?>]]></image:title>
@@ -78,13 +85,23 @@ if ( have_posts() ) :
 		}
 		?>
 		</image:image>
-<?php 
+<?php
 		}
 	endif;
 ?>
  	</url>
-<?php 
-    endwhile; 
-endif; 
+<?php
+    endwhile;
+endif;
+
+if ( !$have_posts ) :
+	// No posts done? Then do at least the homepage to prevent error message in GWT.
+	?>
+	<url>
+		<loc><?php echo esc_url( home_url() ); ?></loc>
+		<priority>1.0</priority>
+	</url>
+<?php
+endif;
 ?></urlset>
-<?php $xmlsf->_e_usage(); 
+<?php $xmlsf->_e_usage();
