@@ -2391,6 +2391,12 @@ float: right;
 		
 	}
 	
+	#socialshare .us_shortcode, #socialsharetwo .us_shortcode {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+	
 	.header-full-width .title-area, .header-full-width .site-title {
 		margin: 0;
 		margin-top: 5px;
