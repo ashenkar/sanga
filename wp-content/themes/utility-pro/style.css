@@ -2365,13 +2365,15 @@ float: right;
 		max-width: 100%;
 	}
 	
-	div.content-sidebar-wrap {
-		
-	}
-	
-	.single-post .full-width-content .content {
-		
-	}
+#socialshare .us_wrapper .us_button, #socialsharetwo .us_wrapper .us_button {
+    min-width: 100px !important;
+  }
+  
+ .us_wrapper {
+	max-width: 96%;
+ }
+
+    
 	
 	#socialshare .us_wrapper .us_button, #socialsharetwo .us_wrapper .us_button {
 		text-align: center;
@@ -2385,10 +2387,6 @@ float: right;
 		height: 40px;
 		overflow: hidden;
 		font-weight: 400;
-	}
-	
-	.single-post .content-sidebar-wrap {
-		
 	}
 	
 	#socialshare .us_shortcode, #socialsharetwo .us_shortcode {
@@ -2423,10 +2421,6 @@ float: right;
 		margin-right: 0;
 		margin-left: 0;
 		clear: both;
-	}
-	
-	body.archive div.postauthor {
-		
 	}
 	
 	.embed-container, #post_summary {
@@ -2499,6 +2493,15 @@ p#breadcrumbs {
     margin: 12px;
 }
 
+#post_summary, .embed-container {
+    margin: 10px !important;
+
+
+}
+
+.yarpp-related h3 {
+    margin: 15px !important;
+}
 
 }
 
@@ -2662,8 +2665,6 @@ min-width: 1200px;
   height: 350px !important;
 }
 
-.site-inner {
-}
 
 
 
